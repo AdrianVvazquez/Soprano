@@ -1022,7 +1022,23 @@ public class sopranoParser extends Parser {
 		}
 	}
 	@SuppressWarnings("CheckReturnValue")
-	public static class ModContext extends ExprContext {
+	public static class VariableContext extends ExprContext {
+		public TerminalNode VAR() { return getToken(sopranoParser.VAR, 0); }
+		public VariableContext(ExprContext ctx) { copyFrom(ctx); }
+	}
+	@SuppressWarnings("CheckReturnValue")
+	public static class NotEqualContext extends ExprContext {
+		public List<ExprContext> expr() {
+			return getRuleContexts(ExprContext.class);
+		}
+		public ExprContext expr(int i) {
+			return getRuleContext(ExprContext.class,i);
+		}
+		public TerminalNode NEQ() { return getToken(sopranoParser.NEQ, 0); }
+		public NotEqualContext(ExprContext ctx) { copyFrom(ctx); }
+	}
+	@SuppressWarnings("CheckReturnValue")
+	public static class ModuloContext extends ExprContext {
 		public List<ExprContext> expr() {
 			return getRuleContexts(ExprContext.class);
 		}
@@ -1030,24 +1046,7 @@ public class sopranoParser extends Parser {
 			return getRuleContext(ExprContext.class,i);
 		}
 		public TerminalNode MOD() { return getToken(sopranoParser.MOD, 0); }
-		public ModContext(ExprContext ctx) { copyFrom(ctx); }
-	}
-	@SuppressWarnings("CheckReturnValue")
-	public static class VarContext extends ExprContext {
-		public TerminalNode VAR() { return getToken(sopranoParser.VAR, 0); }
-		public VarContext(ExprContext ctx) { copyFrom(ctx); }
-	}
-	@SuppressWarnings("CheckReturnValue")
-	public static class SizeContext extends ExprContext {
-		public ListaSizeContext listaSize() {
-			return getRuleContext(ListaSizeContext.class,0);
-		}
-		public SizeContext(ExprContext ctx) { copyFrom(ctx); }
-	}
-	@SuppressWarnings("CheckReturnValue")
-	public static class NumContext extends ExprContext {
-		public TerminalNode NUM() { return getToken(sopranoParser.NUM, 0); }
-		public NumContext(ExprContext ctx) { copyFrom(ctx); }
+		public ModuloContext(ExprContext ctx) { copyFrom(ctx); }
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class ParentsContext extends ExprContext {
@@ -1057,17 +1056,6 @@ public class sopranoParser extends Parser {
 		}
 		public TerminalNode RP() { return getToken(sopranoParser.RP, 0); }
 		public ParentsContext(ExprContext ctx) { copyFrom(ctx); }
-	}
-	@SuppressWarnings("CheckReturnValue")
-	public static class LtContext extends ExprContext {
-		public List<ExprContext> expr() {
-			return getRuleContexts(ExprContext.class);
-		}
-		public ExprContext expr(int i) {
-			return getRuleContext(ExprContext.class,i);
-		}
-		public TerminalNode LT() { return getToken(sopranoParser.LT, 0); }
-		public LtContext(ExprContext ctx) { copyFrom(ctx); }
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class StringContext extends ExprContext {
@@ -1080,26 +1068,11 @@ public class sopranoParser extends Parser {
 		public NotaContext(ExprContext ctx) { copyFrom(ctx); }
 	}
 	@SuppressWarnings("CheckReturnValue")
-	public static class EqContext extends ExprContext {
-		public List<ExprContext> expr() {
-			return getRuleContexts(ExprContext.class);
+	public static class SizeListContext extends ExprContext {
+		public ListaSizeContext listaSize() {
+			return getRuleContext(ListaSizeContext.class,0);
 		}
-		public ExprContext expr(int i) {
-			return getRuleContext(ExprContext.class,i);
-		}
-		public TerminalNode EQ() { return getToken(sopranoParser.EQ, 0); }
-		public EqContext(ExprContext ctx) { copyFrom(ctx); }
-	}
-	@SuppressWarnings("CheckReturnValue")
-	public static class GtContext extends ExprContext {
-		public List<ExprContext> expr() {
-			return getRuleContexts(ExprContext.class);
-		}
-		public ExprContext expr(int i) {
-			return getRuleContext(ExprContext.class,i);
-		}
-		public TerminalNode GT() { return getToken(sopranoParser.GT, 0); }
-		public GtContext(ExprContext ctx) { copyFrom(ctx); }
+		public SizeListContext(ExprContext ctx) { copyFrom(ctx); }
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class DivideContext extends ExprContext {
@@ -1124,6 +1097,22 @@ public class sopranoParser extends Parser {
 		public SumaContext(ExprContext ctx) { copyFrom(ctx); }
 	}
 	@SuppressWarnings("CheckReturnValue")
+	public static class LessThanContext extends ExprContext {
+		public List<ExprContext> expr() {
+			return getRuleContexts(ExprContext.class);
+		}
+		public ExprContext expr(int i) {
+			return getRuleContext(ExprContext.class,i);
+		}
+		public TerminalNode LT() { return getToken(sopranoParser.LT, 0); }
+		public LessThanContext(ExprContext ctx) { copyFrom(ctx); }
+	}
+	@SuppressWarnings("CheckReturnValue")
+	public static class NumberContext extends ExprContext {
+		public TerminalNode NUM() { return getToken(sopranoParser.NUM, 0); }
+		public NumberContext(ExprContext ctx) { copyFrom(ctx); }
+	}
+	@SuppressWarnings("CheckReturnValue")
 	public static class MultContext extends ExprContext {
 		public List<ExprContext> expr() {
 			return getRuleContexts(ExprContext.class);
@@ -1135,14 +1124,29 @@ public class sopranoParser extends Parser {
 		public MultContext(ExprContext ctx) { copyFrom(ctx); }
 	}
 	@SuppressWarnings("CheckReturnValue")
-	public static class ConsultaContext extends ExprContext {
-		public ConsultContext consult() {
-			return getRuleContext(ConsultContext.class,0);
+	public static class GreaterThanContext extends ExprContext {
+		public List<ExprContext> expr() {
+			return getRuleContexts(ExprContext.class);
 		}
-		public ConsultaContext(ExprContext ctx) { copyFrom(ctx); }
+		public ExprContext expr(int i) {
+			return getRuleContext(ExprContext.class,i);
+		}
+		public TerminalNode GT() { return getToken(sopranoParser.GT, 0); }
+		public GreaterThanContext(ExprContext ctx) { copyFrom(ctx); }
 	}
 	@SuppressWarnings("CheckReturnValue")
-	public static class GetContext extends ExprContext {
+	public static class EqualContext extends ExprContext {
+		public List<ExprContext> expr() {
+			return getRuleContexts(ExprContext.class);
+		}
+		public ExprContext expr(int i) {
+			return getRuleContext(ExprContext.class,i);
+		}
+		public TerminalNode EQ() { return getToken(sopranoParser.EQ, 0); }
+		public EqualContext(ExprContext ctx) { copyFrom(ctx); }
+	}
+	@SuppressWarnings("CheckReturnValue")
+	public static class GreaterOrEqualThanContext extends ExprContext {
 		public List<ExprContext> expr() {
 			return getRuleContexts(ExprContext.class);
 		}
@@ -1150,7 +1154,14 @@ public class sopranoParser extends Parser {
 			return getRuleContext(ExprContext.class,i);
 		}
 		public TerminalNode GET() { return getToken(sopranoParser.GET, 0); }
-		public GetContext(ExprContext ctx) { copyFrom(ctx); }
+		public GreaterOrEqualThanContext(ExprContext ctx) { copyFrom(ctx); }
+	}
+	@SuppressWarnings("CheckReturnValue")
+	public static class ConsultaContext extends ExprContext {
+		public ConsultContext consult() {
+			return getRuleContext(ConsultContext.class,0);
+		}
+		public ConsultaContext(ExprContext ctx) { copyFrom(ctx); }
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class ListContext extends ExprContext {
@@ -1160,7 +1171,7 @@ public class sopranoParser extends Parser {
 		public ListContext(ExprContext ctx) { copyFrom(ctx); }
 	}
 	@SuppressWarnings("CheckReturnValue")
-	public static class LetContext extends ExprContext {
+	public static class LessOrEqualThanContext extends ExprContext {
 		public List<ExprContext> expr() {
 			return getRuleContexts(ExprContext.class);
 		}
@@ -1168,18 +1179,7 @@ public class sopranoParser extends Parser {
 			return getRuleContext(ExprContext.class,i);
 		}
 		public TerminalNode LET() { return getToken(sopranoParser.LET, 0); }
-		public LetContext(ExprContext ctx) { copyFrom(ctx); }
-	}
-	@SuppressWarnings("CheckReturnValue")
-	public static class NeqContext extends ExprContext {
-		public List<ExprContext> expr() {
-			return getRuleContexts(ExprContext.class);
-		}
-		public ExprContext expr(int i) {
-			return getRuleContext(ExprContext.class,i);
-		}
-		public TerminalNode NEQ() { return getToken(sopranoParser.NEQ, 0); }
-		public NeqContext(ExprContext ctx) { copyFrom(ctx); }
+		public LessOrEqualThanContext(ExprContext ctx) { copyFrom(ctx); }
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class RestaContext extends ExprContext {
@@ -1213,7 +1213,7 @@ public class sopranoParser extends Parser {
 			switch ( getInterpreter().adaptivePredict(_input,11,_ctx) ) {
 			case 1:
 				{
-				_localctx = new VarContext(_localctx);
+				_localctx = new VariableContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
 
@@ -1232,7 +1232,7 @@ public class sopranoParser extends Parser {
 				break;
 			case 3:
 				{
-				_localctx = new NumContext(_localctx);
+				_localctx = new NumberContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
 				setState(154);
@@ -1250,7 +1250,7 @@ public class sopranoParser extends Parser {
 				break;
 			case 5:
 				{
-				_localctx = new SizeContext(_localctx);
+				_localctx = new SizeListContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
 				setState(156);
@@ -1327,7 +1327,7 @@ public class sopranoParser extends Parser {
 						break;
 					case 3:
 						{
-						_localctx = new ModContext(new ExprContext(_parentctx, _parentState));
+						_localctx = new ModuloContext(new ExprContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_expr);
 						setState(171);
 						if (!(precpred(_ctx, 17))) throw new FailedPredicateException(this, "precpred(_ctx, 17)");
@@ -1363,7 +1363,7 @@ public class sopranoParser extends Parser {
 						break;
 					case 6:
 						{
-						_localctx = new GtContext(new ExprContext(_parentctx, _parentState));
+						_localctx = new GreaterThanContext(new ExprContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_expr);
 						setState(180);
 						if (!(precpred(_ctx, 14))) throw new FailedPredicateException(this, "precpred(_ctx, 14)");
@@ -1375,7 +1375,7 @@ public class sopranoParser extends Parser {
 						break;
 					case 7:
 						{
-						_localctx = new GetContext(new ExprContext(_parentctx, _parentState));
+						_localctx = new GreaterOrEqualThanContext(new ExprContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_expr);
 						setState(183);
 						if (!(precpred(_ctx, 13))) throw new FailedPredicateException(this, "precpred(_ctx, 13)");
@@ -1387,7 +1387,7 @@ public class sopranoParser extends Parser {
 						break;
 					case 8:
 						{
-						_localctx = new LtContext(new ExprContext(_parentctx, _parentState));
+						_localctx = new LessThanContext(new ExprContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_expr);
 						setState(186);
 						if (!(precpred(_ctx, 12))) throw new FailedPredicateException(this, "precpred(_ctx, 12)");
@@ -1399,7 +1399,7 @@ public class sopranoParser extends Parser {
 						break;
 					case 9:
 						{
-						_localctx = new LetContext(new ExprContext(_parentctx, _parentState));
+						_localctx = new LessOrEqualThanContext(new ExprContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_expr);
 						setState(189);
 						if (!(precpred(_ctx, 11))) throw new FailedPredicateException(this, "precpred(_ctx, 11)");
@@ -1411,7 +1411,7 @@ public class sopranoParser extends Parser {
 						break;
 					case 10:
 						{
-						_localctx = new EqContext(new ExprContext(_parentctx, _parentState));
+						_localctx = new EqualContext(new ExprContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_expr);
 						setState(192);
 						if (!(precpred(_ctx, 10))) throw new FailedPredicateException(this, "precpred(_ctx, 10)");
@@ -1423,7 +1423,7 @@ public class sopranoParser extends Parser {
 						break;
 					case 11:
 						{
-						_localctx = new NeqContext(new ExprContext(_parentctx, _parentState));
+						_localctx = new NotEqualContext(new ExprContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_expr);
 						setState(195);
 						if (!(precpred(_ctx, 9))) throw new FailedPredicateException(this, "precpred(_ctx, 9)");

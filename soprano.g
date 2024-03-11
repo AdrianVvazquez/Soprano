@@ -31,20 +31,20 @@ push: VAR AGREGA expr;
 
 expr: expr MUL expr     # Mult
     | expr DIV expr     # Divide
-    | expr MOD expr     # Mod
+    | expr MOD expr     # Modulo
     | expr SUM expr     # Suma
     | expr RESTA expr   # Resta
-    | expr GT expr      # Gt
-    | expr GET expr     # Get
-    | expr LT expr      # Lt
-    | expr LET expr     # Let
-    | expr EQ expr      # Eq
-    | expr NEQ expr     # Neq
-    | VAR               # Var
+    | expr GT expr      # GreaterThan
+    | expr GET expr     # GreaterOrEqualThan
+    | expr LT expr      # LessThan
+    | expr LET expr     # LessOrEqualThan
+    | expr EQ expr      # Equal
+    | expr NEQ expr     # NotEqual
+    | VAR               # Variable
     | STRING            # String
-    | NUM               # Num
+    | NUM               # Number
     | lista             # List
-    | listaSize         # Size
+    | listaSize         # SizeList
     | consult           # Consulta
     | NOTA              # Nota
     | LP expr RP        # Parents

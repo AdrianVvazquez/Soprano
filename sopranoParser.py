@@ -1226,7 +1226,45 @@ class sopranoParser ( Parser ):
             super().copyFrom(ctx)
 
 
-    class ModContext(ExprContext):
+    class VariableContext(ExprContext):
+
+        def __init__(self, parser, ctx:ParserRuleContext): # actually a sopranoParser.ExprContext
+            super().__init__(parser)
+            self.copyFrom(ctx)
+
+        def VAR(self):
+            return self.getToken(sopranoParser.VAR, 0)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitVariable" ):
+                return visitor.visitVariable(self)
+            else:
+                return visitor.visitChildren(self)
+
+
+    class NotEqualContext(ExprContext):
+
+        def __init__(self, parser, ctx:ParserRuleContext): # actually a sopranoParser.ExprContext
+            super().__init__(parser)
+            self.copyFrom(ctx)
+
+        def expr(self, i:int=None):
+            if i is None:
+                return self.getTypedRuleContexts(sopranoParser.ExprContext)
+            else:
+                return self.getTypedRuleContext(sopranoParser.ExprContext,i)
+
+        def NEQ(self):
+            return self.getToken(sopranoParser.NEQ, 0)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitNotEqual" ):
+                return visitor.visitNotEqual(self)
+            else:
+                return visitor.visitChildren(self)
+
+
+    class ModuloContext(ExprContext):
 
         def __init__(self, parser, ctx:ParserRuleContext): # actually a sopranoParser.ExprContext
             super().__init__(parser)
@@ -1242,57 +1280,8 @@ class sopranoParser ( Parser ):
             return self.getToken(sopranoParser.MOD, 0)
 
         def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitMod" ):
-                return visitor.visitMod(self)
-            else:
-                return visitor.visitChildren(self)
-
-
-    class VarContext(ExprContext):
-
-        def __init__(self, parser, ctx:ParserRuleContext): # actually a sopranoParser.ExprContext
-            super().__init__(parser)
-            self.copyFrom(ctx)
-
-        def VAR(self):
-            return self.getToken(sopranoParser.VAR, 0)
-
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitVar" ):
-                return visitor.visitVar(self)
-            else:
-                return visitor.visitChildren(self)
-
-
-    class SizeContext(ExprContext):
-
-        def __init__(self, parser, ctx:ParserRuleContext): # actually a sopranoParser.ExprContext
-            super().__init__(parser)
-            self.copyFrom(ctx)
-
-        def listaSize(self):
-            return self.getTypedRuleContext(sopranoParser.ListaSizeContext,0)
-
-
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitSize" ):
-                return visitor.visitSize(self)
-            else:
-                return visitor.visitChildren(self)
-
-
-    class NumContext(ExprContext):
-
-        def __init__(self, parser, ctx:ParserRuleContext): # actually a sopranoParser.ExprContext
-            super().__init__(parser)
-            self.copyFrom(ctx)
-
-        def NUM(self):
-            return self.getToken(sopranoParser.NUM, 0)
-
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitNum" ):
-                return visitor.visitNum(self)
+            if hasattr( visitor, "visitModulo" ):
+                return visitor.visitModulo(self)
             else:
                 return visitor.visitChildren(self)
 
@@ -1314,28 +1303,6 @@ class sopranoParser ( Parser ):
         def accept(self, visitor:ParseTreeVisitor):
             if hasattr( visitor, "visitParents" ):
                 return visitor.visitParents(self)
-            else:
-                return visitor.visitChildren(self)
-
-
-    class LtContext(ExprContext):
-
-        def __init__(self, parser, ctx:ParserRuleContext): # actually a sopranoParser.ExprContext
-            super().__init__(parser)
-            self.copyFrom(ctx)
-
-        def expr(self, i:int=None):
-            if i is None:
-                return self.getTypedRuleContexts(sopranoParser.ExprContext)
-            else:
-                return self.getTypedRuleContext(sopranoParser.ExprContext,i)
-
-        def LT(self):
-            return self.getToken(sopranoParser.LT, 0)
-
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitLt" ):
-                return visitor.visitLt(self)
             else:
                 return visitor.visitChildren(self)
 
@@ -1372,46 +1339,19 @@ class sopranoParser ( Parser ):
                 return visitor.visitChildren(self)
 
 
-    class EqContext(ExprContext):
+    class SizeListContext(ExprContext):
 
         def __init__(self, parser, ctx:ParserRuleContext): # actually a sopranoParser.ExprContext
             super().__init__(parser)
             self.copyFrom(ctx)
 
-        def expr(self, i:int=None):
-            if i is None:
-                return self.getTypedRuleContexts(sopranoParser.ExprContext)
-            else:
-                return self.getTypedRuleContext(sopranoParser.ExprContext,i)
+        def listaSize(self):
+            return self.getTypedRuleContext(sopranoParser.ListaSizeContext,0)
 
-        def EQ(self):
-            return self.getToken(sopranoParser.EQ, 0)
 
         def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitEq" ):
-                return visitor.visitEq(self)
-            else:
-                return visitor.visitChildren(self)
-
-
-    class GtContext(ExprContext):
-
-        def __init__(self, parser, ctx:ParserRuleContext): # actually a sopranoParser.ExprContext
-            super().__init__(parser)
-            self.copyFrom(ctx)
-
-        def expr(self, i:int=None):
-            if i is None:
-                return self.getTypedRuleContexts(sopranoParser.ExprContext)
-            else:
-                return self.getTypedRuleContext(sopranoParser.ExprContext,i)
-
-        def GT(self):
-            return self.getToken(sopranoParser.GT, 0)
-
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitGt" ):
-                return visitor.visitGt(self)
+            if hasattr( visitor, "visitSizeList" ):
+                return visitor.visitSizeList(self)
             else:
                 return visitor.visitChildren(self)
 
@@ -1460,6 +1400,44 @@ class sopranoParser ( Parser ):
                 return visitor.visitChildren(self)
 
 
+    class LessThanContext(ExprContext):
+
+        def __init__(self, parser, ctx:ParserRuleContext): # actually a sopranoParser.ExprContext
+            super().__init__(parser)
+            self.copyFrom(ctx)
+
+        def expr(self, i:int=None):
+            if i is None:
+                return self.getTypedRuleContexts(sopranoParser.ExprContext)
+            else:
+                return self.getTypedRuleContext(sopranoParser.ExprContext,i)
+
+        def LT(self):
+            return self.getToken(sopranoParser.LT, 0)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitLessThan" ):
+                return visitor.visitLessThan(self)
+            else:
+                return visitor.visitChildren(self)
+
+
+    class NumberContext(ExprContext):
+
+        def __init__(self, parser, ctx:ParserRuleContext): # actually a sopranoParser.ExprContext
+            super().__init__(parser)
+            self.copyFrom(ctx)
+
+        def NUM(self):
+            return self.getToken(sopranoParser.NUM, 0)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitNumber" ):
+                return visitor.visitNumber(self)
+            else:
+                return visitor.visitChildren(self)
+
+
     class MultContext(ExprContext):
 
         def __init__(self, parser, ctx:ParserRuleContext): # actually a sopranoParser.ExprContext
@@ -1482,24 +1460,51 @@ class sopranoParser ( Parser ):
                 return visitor.visitChildren(self)
 
 
-    class ConsultaContext(ExprContext):
+    class GreaterThanContext(ExprContext):
 
         def __init__(self, parser, ctx:ParserRuleContext): # actually a sopranoParser.ExprContext
             super().__init__(parser)
             self.copyFrom(ctx)
 
-        def consult(self):
-            return self.getTypedRuleContext(sopranoParser.ConsultContext,0)
+        def expr(self, i:int=None):
+            if i is None:
+                return self.getTypedRuleContexts(sopranoParser.ExprContext)
+            else:
+                return self.getTypedRuleContext(sopranoParser.ExprContext,i)
 
+        def GT(self):
+            return self.getToken(sopranoParser.GT, 0)
 
         def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitConsulta" ):
-                return visitor.visitConsulta(self)
+            if hasattr( visitor, "visitGreaterThan" ):
+                return visitor.visitGreaterThan(self)
             else:
                 return visitor.visitChildren(self)
 
 
-    class GetContext(ExprContext):
+    class EqualContext(ExprContext):
+
+        def __init__(self, parser, ctx:ParserRuleContext): # actually a sopranoParser.ExprContext
+            super().__init__(parser)
+            self.copyFrom(ctx)
+
+        def expr(self, i:int=None):
+            if i is None:
+                return self.getTypedRuleContexts(sopranoParser.ExprContext)
+            else:
+                return self.getTypedRuleContext(sopranoParser.ExprContext,i)
+
+        def EQ(self):
+            return self.getToken(sopranoParser.EQ, 0)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitEqual" ):
+                return visitor.visitEqual(self)
+            else:
+                return visitor.visitChildren(self)
+
+
+    class GreaterOrEqualThanContext(ExprContext):
 
         def __init__(self, parser, ctx:ParserRuleContext): # actually a sopranoParser.ExprContext
             super().__init__(parser)
@@ -1515,8 +1520,25 @@ class sopranoParser ( Parser ):
             return self.getToken(sopranoParser.GET, 0)
 
         def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitGet" ):
-                return visitor.visitGet(self)
+            if hasattr( visitor, "visitGreaterOrEqualThan" ):
+                return visitor.visitGreaterOrEqualThan(self)
+            else:
+                return visitor.visitChildren(self)
+
+
+    class ConsultaContext(ExprContext):
+
+        def __init__(self, parser, ctx:ParserRuleContext): # actually a sopranoParser.ExprContext
+            super().__init__(parser)
+            self.copyFrom(ctx)
+
+        def consult(self):
+            return self.getTypedRuleContext(sopranoParser.ConsultContext,0)
+
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitConsulta" ):
+                return visitor.visitConsulta(self)
             else:
                 return visitor.visitChildren(self)
 
@@ -1538,7 +1560,7 @@ class sopranoParser ( Parser ):
                 return visitor.visitChildren(self)
 
 
-    class LetContext(ExprContext):
+    class LessOrEqualThanContext(ExprContext):
 
         def __init__(self, parser, ctx:ParserRuleContext): # actually a sopranoParser.ExprContext
             super().__init__(parser)
@@ -1554,30 +1576,8 @@ class sopranoParser ( Parser ):
             return self.getToken(sopranoParser.LET, 0)
 
         def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitLet" ):
-                return visitor.visitLet(self)
-            else:
-                return visitor.visitChildren(self)
-
-
-    class NeqContext(ExprContext):
-
-        def __init__(self, parser, ctx:ParserRuleContext): # actually a sopranoParser.ExprContext
-            super().__init__(parser)
-            self.copyFrom(ctx)
-
-        def expr(self, i:int=None):
-            if i is None:
-                return self.getTypedRuleContexts(sopranoParser.ExprContext)
-            else:
-                return self.getTypedRuleContext(sopranoParser.ExprContext,i)
-
-        def NEQ(self):
-            return self.getToken(sopranoParser.NEQ, 0)
-
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitNeq" ):
-                return visitor.visitNeq(self)
+            if hasattr( visitor, "visitLessOrEqualThan" ):
+                return visitor.visitLessOrEqualThan(self)
             else:
                 return visitor.visitChildren(self)
 
@@ -1618,7 +1618,7 @@ class sopranoParser ( Parser ):
             self._errHandler.sync(self)
             la_ = self._interp.adaptivePredict(self._input,11,self._ctx)
             if la_ == 1:
-                localctx = sopranoParser.VarContext(self, localctx)
+                localctx = sopranoParser.VariableContext(self, localctx)
                 self._ctx = localctx
                 _prevctx = localctx
 
@@ -1635,7 +1635,7 @@ class sopranoParser ( Parser ):
                 pass
 
             elif la_ == 3:
-                localctx = sopranoParser.NumContext(self, localctx)
+                localctx = sopranoParser.NumberContext(self, localctx)
                 self._ctx = localctx
                 _prevctx = localctx
                 self.state = 154
@@ -1651,7 +1651,7 @@ class sopranoParser ( Parser ):
                 pass
 
             elif la_ == 5:
-                localctx = sopranoParser.SizeContext(self, localctx)
+                localctx = sopranoParser.SizeListContext(self, localctx)
                 self._ctx = localctx
                 _prevctx = localctx
                 self.state = 156
@@ -1726,7 +1726,7 @@ class sopranoParser ( Parser ):
                         pass
 
                     elif la_ == 3:
-                        localctx = sopranoParser.ModContext(self, sopranoParser.ExprContext(self, _parentctx, _parentState))
+                        localctx = sopranoParser.ModuloContext(self, sopranoParser.ExprContext(self, _parentctx, _parentState))
                         self.pushNewRecursionContext(localctx, _startState, self.RULE_expr)
                         self.state = 171
                         if not self.precpred(self._ctx, 17):
@@ -1765,7 +1765,7 @@ class sopranoParser ( Parser ):
                         pass
 
                     elif la_ == 6:
-                        localctx = sopranoParser.GtContext(self, sopranoParser.ExprContext(self, _parentctx, _parentState))
+                        localctx = sopranoParser.GreaterThanContext(self, sopranoParser.ExprContext(self, _parentctx, _parentState))
                         self.pushNewRecursionContext(localctx, _startState, self.RULE_expr)
                         self.state = 180
                         if not self.precpred(self._ctx, 14):
@@ -1778,7 +1778,7 @@ class sopranoParser ( Parser ):
                         pass
 
                     elif la_ == 7:
-                        localctx = sopranoParser.GetContext(self, sopranoParser.ExprContext(self, _parentctx, _parentState))
+                        localctx = sopranoParser.GreaterOrEqualThanContext(self, sopranoParser.ExprContext(self, _parentctx, _parentState))
                         self.pushNewRecursionContext(localctx, _startState, self.RULE_expr)
                         self.state = 183
                         if not self.precpred(self._ctx, 13):
@@ -1791,7 +1791,7 @@ class sopranoParser ( Parser ):
                         pass
 
                     elif la_ == 8:
-                        localctx = sopranoParser.LtContext(self, sopranoParser.ExprContext(self, _parentctx, _parentState))
+                        localctx = sopranoParser.LessThanContext(self, sopranoParser.ExprContext(self, _parentctx, _parentState))
                         self.pushNewRecursionContext(localctx, _startState, self.RULE_expr)
                         self.state = 186
                         if not self.precpred(self._ctx, 12):
@@ -1804,7 +1804,7 @@ class sopranoParser ( Parser ):
                         pass
 
                     elif la_ == 9:
-                        localctx = sopranoParser.LetContext(self, sopranoParser.ExprContext(self, _parentctx, _parentState))
+                        localctx = sopranoParser.LessOrEqualThanContext(self, sopranoParser.ExprContext(self, _parentctx, _parentState))
                         self.pushNewRecursionContext(localctx, _startState, self.RULE_expr)
                         self.state = 189
                         if not self.precpred(self._ctx, 11):
@@ -1817,7 +1817,7 @@ class sopranoParser ( Parser ):
                         pass
 
                     elif la_ == 10:
-                        localctx = sopranoParser.EqContext(self, sopranoParser.ExprContext(self, _parentctx, _parentState))
+                        localctx = sopranoParser.EqualContext(self, sopranoParser.ExprContext(self, _parentctx, _parentState))
                         self.pushNewRecursionContext(localctx, _startState, self.RULE_expr)
                         self.state = 192
                         if not self.precpred(self._ctx, 10):
@@ -1830,7 +1830,7 @@ class sopranoParser ( Parser ):
                         pass
 
                     elif la_ == 11:
-                        localctx = sopranoParser.NeqContext(self, sopranoParser.ExprContext(self, _parentctx, _parentState))
+                        localctx = sopranoParser.NotEqualContext(self, sopranoParser.ExprContext(self, _parentctx, _parentState))
                         self.pushNewRecursionContext(localctx, _startState, self.RULE_expr)
                         self.state = 195
                         if not self.precpred(self._ctx, 9):

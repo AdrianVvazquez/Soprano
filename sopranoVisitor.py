@@ -99,33 +99,23 @@ class sopranoVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by sopranoParser#Mod.
-    def visitMod(self, ctx:sopranoParser.ModContext):
+    # Visit a parse tree produced by sopranoParser#Variable.
+    def visitVariable(self, ctx:sopranoParser.VariableContext):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by sopranoParser#Var.
-    def visitVar(self, ctx:sopranoParser.VarContext):
+    # Visit a parse tree produced by sopranoParser#NotEqual.
+    def visitNotEqual(self, ctx:sopranoParser.NotEqualContext):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by sopranoParser#Size.
-    def visitSize(self, ctx:sopranoParser.SizeContext):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by sopranoParser#Num.
-    def visitNum(self, ctx:sopranoParser.NumContext):
+    # Visit a parse tree produced by sopranoParser#Modulo.
+    def visitModulo(self, ctx:sopranoParser.ModuloContext):
         return self.visitChildren(ctx)
 
 
     # Visit a parse tree produced by sopranoParser#Parents.
     def visitParents(self, ctx:sopranoParser.ParentsContext):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by sopranoParser#Lt.
-    def visitLt(self, ctx:sopranoParser.LtContext):
         return self.visitChildren(ctx)
 
 
@@ -139,13 +129,8 @@ class sopranoVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by sopranoParser#Eq.
-    def visitEq(self, ctx:sopranoParser.EqContext):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by sopranoParser#Gt.
-    def visitGt(self, ctx:sopranoParser.GtContext):
+    # Visit a parse tree produced by sopranoParser#SizeList.
+    def visitSizeList(self, ctx:sopranoParser.SizeListContext):
         return self.visitChildren(ctx)
 
 
@@ -159,8 +144,33 @@ class sopranoVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by sopranoParser#LessThan.
+    def visitLessThan(self, ctx:sopranoParser.LessThanContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by sopranoParser#Number.
+    def visitNumber(self, ctx:sopranoParser.NumberContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by sopranoParser#Mult.
     def visitMult(self, ctx:sopranoParser.MultContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by sopranoParser#GreaterThan.
+    def visitGreaterThan(self, ctx:sopranoParser.GreaterThanContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by sopranoParser#Equal.
+    def visitEqual(self, ctx:sopranoParser.EqualContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by sopranoParser#GreaterOrEqualThan.
+    def visitGreaterOrEqualThan(self, ctx:sopranoParser.GreaterOrEqualThanContext):
         return self.visitChildren(ctx)
 
 
@@ -169,23 +179,13 @@ class sopranoVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by sopranoParser#Get.
-    def visitGet(self, ctx:sopranoParser.GetContext):
-        return self.visitChildren(ctx)
-
-
     # Visit a parse tree produced by sopranoParser#List.
     def visitList(self, ctx:sopranoParser.ListContext):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by sopranoParser#Let.
-    def visitLet(self, ctx:sopranoParser.LetContext):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by sopranoParser#Neq.
-    def visitNeq(self, ctx:sopranoParser.NeqContext):
+    # Visit a parse tree produced by sopranoParser#LessOrEqualThan.
+    def visitLessOrEqualThan(self, ctx:sopranoParser.LessOrEqualThanContext):
         return self.visitChildren(ctx)
 
 
