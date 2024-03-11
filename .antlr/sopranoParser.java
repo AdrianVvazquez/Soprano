@@ -23,15 +23,15 @@ public class sopranoParser extends Parser {
 		WS=36;
 	public static final int
 		RULE_root = 0, RULE_inss = 1, RULE_ins = 2, RULE_lectura = 3, RULE_escritura = 4, 
-		RULE_condicion = 5, RULE_iteracion = 6, RULE_procedimiento = 7, RULE_llamada_procedimiento = 8, 
+		RULE_condicion = 5, RULE_iteracion = 6, RULE_procedimiento = 7, RULE_llamadaProcedimiento = 8, 
 		RULE_paramsId = 9, RULE_paramsExpr = 10, RULE_asignacion = 11, RULE_reproduccion = 12, 
-		RULE_lista = 13, RULE_lista_size = 14, RULE_consult = 15, RULE_cut = 16, 
+		RULE_lista = 13, RULE_listaSize = 14, RULE_consult = 15, RULE_cut = 16, 
 		RULE_push = 17, RULE_expr = 18;
 	private static String[] makeRuleNames() {
 		return new String[] {
 			"root", "inss", "ins", "lectura", "escritura", "condicion", "iteracion", 
-			"procedimiento", "llamada_procedimiento", "paramsId", "paramsExpr", "asignacion", 
-			"reproduccion", "lista", "lista_size", "consult", "cut", "push", "expr"
+			"procedimiento", "llamadaProcedimiento", "paramsId", "paramsExpr", "asignacion", 
+			"reproduccion", "lista", "listaSize", "consult", "cut", "push", "expr"
 		};
 	}
 	public static final String[] ruleNames = makeRuleNames();
@@ -217,8 +217,8 @@ public class sopranoParser extends Parser {
 		public EscrituraContext escritura() {
 			return getRuleContext(EscrituraContext.class,0);
 		}
-		public Llamada_procedimientoContext llamada_procedimiento() {
-			return getRuleContext(Llamada_procedimientoContext.class,0);
+		public LlamadaProcedimientoContext llamadaProcedimiento() {
+			return getRuleContext(LlamadaProcedimientoContext.class,0);
 		}
 		public AsignacionContext asignacion() {
 			return getRuleContext(AsignacionContext.class,0);
@@ -289,7 +289,7 @@ public class sopranoParser extends Parser {
 				case PROCNAME:
 					{
 					setState(58);
-					llamada_procedimiento();
+					llamadaProcedimiento();
 					}
 					break;
 				case VAR:
@@ -596,20 +596,20 @@ public class sopranoParser extends Parser {
 	}
 
 	@SuppressWarnings("CheckReturnValue")
-	public static class Llamada_procedimientoContext extends ParserRuleContext {
+	public static class LlamadaProcedimientoContext extends ParserRuleContext {
 		public TerminalNode PROCNAME() { return getToken(sopranoParser.PROCNAME, 0); }
 		public ParamsExprContext paramsExpr() {
 			return getRuleContext(ParamsExprContext.class,0);
 		}
-		public Llamada_procedimientoContext(ParserRuleContext parent, int invokingState) {
+		public LlamadaProcedimientoContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_llamada_procedimiento; }
+		@Override public int getRuleIndex() { return RULE_llamadaProcedimiento; }
 	}
 
-	public final Llamada_procedimientoContext llamada_procedimiento() throws RecognitionException {
-		Llamada_procedimientoContext _localctx = new Llamada_procedimientoContext(_ctx, getState());
-		enterRule(_localctx, 16, RULE_llamada_procedimiento);
+	public final LlamadaProcedimientoContext llamadaProcedimiento() throws RecognitionException {
+		LlamadaProcedimientoContext _localctx = new LlamadaProcedimientoContext(_ctx, getState());
+		enterRule(_localctx, 16, RULE_llamadaProcedimiento);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
@@ -854,18 +854,18 @@ public class sopranoParser extends Parser {
 	}
 
 	@SuppressWarnings("CheckReturnValue")
-	public static class Lista_sizeContext extends ParserRuleContext {
+	public static class ListaSizeContext extends ParserRuleContext {
 		public TerminalNode SIZE() { return getToken(sopranoParser.SIZE, 0); }
 		public TerminalNode VAR() { return getToken(sopranoParser.VAR, 0); }
-		public Lista_sizeContext(ParserRuleContext parent, int invokingState) {
+		public ListaSizeContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_lista_size; }
+		@Override public int getRuleIndex() { return RULE_listaSize; }
 	}
 
-	public final Lista_sizeContext lista_size() throws RecognitionException {
-		Lista_sizeContext _localctx = new Lista_sizeContext(_ctx, getState());
-		enterRule(_localctx, 28, RULE_lista_size);
+	public final ListaSizeContext listaSize() throws RecognitionException {
+		ListaSizeContext _localctx = new ListaSizeContext(_ctx, getState());
+		enterRule(_localctx, 28, RULE_listaSize);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
@@ -1039,8 +1039,8 @@ public class sopranoParser extends Parser {
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class SizeContext extends ExprContext {
-		public Lista_sizeContext lista_size() {
-			return getRuleContext(Lista_sizeContext.class,0);
+		public ListaSizeContext listaSize() {
+			return getRuleContext(ListaSizeContext.class,0);
 		}
 		public SizeContext(ExprContext ctx) { copyFrom(ctx); }
 	}
@@ -1254,7 +1254,7 @@ public class sopranoParser extends Parser {
 				_ctx = _localctx;
 				_prevctx = _localctx;
 				setState(156);
-				lista_size();
+				listaSize();
 				}
 				break;
 			case 6:

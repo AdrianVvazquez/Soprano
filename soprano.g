@@ -6,7 +6,7 @@ root: procedimiento* EOF; // cualquier procedimiento cero o más veces y End Of 
 inss: ins*;
 
 ins: (condicion | iteracion) 
-    | (lectura | escritura | llamada_procedimiento | asignacion | reproduccion)
+    | (lectura | escritura | llamadaProcedimiento | asignacion | reproduccion)
     | (push | cut)
     ;
 
@@ -16,7 +16,7 @@ condicion: 'if' expr LB inss RB ('else' LB inss RB)?; // 1 o ningun else
 iteracion: 'while' expr LB inss RB;
 
 procedimiento: PROCNAME paramsId LB inss RB;
-llamada_procedimiento: PROCNAME paramsExpr;
+llamadaProcedimiento: PROCNAME paramsExpr;
 
 paramsId: (VAR)*;
 paramsExpr: (expr)*;
@@ -24,7 +24,7 @@ paramsExpr: (expr)*;
 asignacion: VAR ASSIGN expr;
 reproduccion: REPROD expr;
 lista: LC expr* RC;
-lista_size: SIZE VAR;
+listaSize: SIZE VAR;
 consult: VAR LS expr RS;
 cut: CORTA VAR LS expr RS;
 push: VAR AGREGA expr;
@@ -44,7 +44,7 @@ expr: expr MUL expr     # Mult
     | STRING            # String
     | NUM               # Num
     | lista             # List
-    | lista_size        # Size
+    | listaSize         # Size
     | consult           # Consulta
     | NOTA              # Nota
     | LP expr RP        # Parents

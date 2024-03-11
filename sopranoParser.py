@@ -123,22 +123,22 @@ class sopranoParser ( Parser ):
     RULE_condicion = 5
     RULE_iteracion = 6
     RULE_procedimiento = 7
-    RULE_llamada_procedimiento = 8
+    RULE_llamadaProcedimiento = 8
     RULE_paramsId = 9
     RULE_paramsExpr = 10
     RULE_asignacion = 11
     RULE_reproduccion = 12
     RULE_lista = 13
-    RULE_lista_size = 14
+    RULE_listaSize = 14
     RULE_consult = 15
     RULE_cut = 16
     RULE_push = 17
     RULE_expr = 18
 
     ruleNames =  [ "root", "inss", "ins", "lectura", "escritura", "condicion", 
-                   "iteracion", "procedimiento", "llamada_procedimiento", 
+                   "iteracion", "procedimiento", "llamadaProcedimiento", 
                    "paramsId", "paramsExpr", "asignacion", "reproduccion", 
-                   "lista", "lista_size", "consult", "cut", "push", "expr" ]
+                   "lista", "listaSize", "consult", "cut", "push", "expr" ]
 
     EOF = Token.EOF
     T__0=1
@@ -313,8 +313,8 @@ class sopranoParser ( Parser ):
             return self.getTypedRuleContext(sopranoParser.EscrituraContext,0)
 
 
-        def llamada_procedimiento(self):
-            return self.getTypedRuleContext(sopranoParser.Llamada_procedimientoContext,0)
+        def llamadaProcedimiento(self):
+            return self.getTypedRuleContext(sopranoParser.LlamadaProcedimientoContext,0)
 
 
         def asignacion(self):
@@ -386,7 +386,7 @@ class sopranoParser ( Parser ):
                     pass
                 elif token in [sopranoParser.PROCNAME]:
                     self.state = 58
-                    self.llamada_procedimiento()
+                    self.llamadaProcedimiento()
                     pass
                 elif token in [sopranoParser.VAR]:
                     self.state = 59
@@ -717,7 +717,7 @@ class sopranoParser ( Parser ):
             self.exitRule()
         return localctx
 
-    class Llamada_procedimientoContext(ParserRuleContext):
+    class LlamadaProcedimientoContext(ParserRuleContext):
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -731,21 +731,21 @@ class sopranoParser ( Parser ):
 
 
         def getRuleIndex(self):
-            return sopranoParser.RULE_llamada_procedimiento
+            return sopranoParser.RULE_llamadaProcedimiento
 
         def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitLlamada_procedimiento" ):
-                return visitor.visitLlamada_procedimiento(self)
+            if hasattr( visitor, "visitLlamadaProcedimiento" ):
+                return visitor.visitLlamadaProcedimiento(self)
             else:
                 return visitor.visitChildren(self)
 
 
 
 
-    def llamada_procedimiento(self):
+    def llamadaProcedimiento(self):
 
-        localctx = sopranoParser.Llamada_procedimientoContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 16, self.RULE_llamada_procedimiento)
+        localctx = sopranoParser.LlamadaProcedimientoContext(self, self._ctx, self.state)
+        self.enterRule(localctx, 16, self.RULE_llamadaProcedimiento)
         try:
             self.enterOuterAlt(localctx, 1)
             self.state = 102
@@ -1010,7 +1010,7 @@ class sopranoParser ( Parser ):
             self.exitRule()
         return localctx
 
-    class Lista_sizeContext(ParserRuleContext):
+    class ListaSizeContext(ParserRuleContext):
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -1023,21 +1023,21 @@ class sopranoParser ( Parser ):
             return self.getToken(sopranoParser.VAR, 0)
 
         def getRuleIndex(self):
-            return sopranoParser.RULE_lista_size
+            return sopranoParser.RULE_listaSize
 
         def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitLista_size" ):
-                return visitor.visitLista_size(self)
+            if hasattr( visitor, "visitListaSize" ):
+                return visitor.visitListaSize(self)
             else:
                 return visitor.visitChildren(self)
 
 
 
 
-    def lista_size(self):
+    def listaSize(self):
 
-        localctx = sopranoParser.Lista_sizeContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 28, self.RULE_lista_size)
+        localctx = sopranoParser.ListaSizeContext(self, self._ctx, self.state)
+        self.enterRule(localctx, 28, self.RULE_listaSize)
         try:
             self.enterOuterAlt(localctx, 1)
             self.state = 133
@@ -1270,8 +1270,8 @@ class sopranoParser ( Parser ):
             super().__init__(parser)
             self.copyFrom(ctx)
 
-        def lista_size(self):
-            return self.getTypedRuleContext(sopranoParser.Lista_sizeContext,0)
+        def listaSize(self):
+            return self.getTypedRuleContext(sopranoParser.ListaSizeContext,0)
 
 
         def accept(self, visitor:ParseTreeVisitor):
@@ -1655,7 +1655,7 @@ class sopranoParser ( Parser ):
                 self._ctx = localctx
                 _prevctx = localctx
                 self.state = 156
-                self.lista_size()
+                self.listaSize()
                 pass
 
             elif la_ == 6:

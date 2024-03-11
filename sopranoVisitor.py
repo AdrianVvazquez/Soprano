@@ -49,8 +49,8 @@ class sopranoVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by sopranoParser#llamada_procedimiento.
-    def visitLlamada_procedimiento(self, ctx:sopranoParser.Llamada_procedimientoContext):
+    # Visit a parse tree produced by sopranoParser#llamadaProcedimiento.
+    def visitLlamadaProcedimiento(self, ctx:sopranoParser.LlamadaProcedimientoContext):
         return self.visitChildren(ctx)
 
 
@@ -79,8 +79,8 @@ class sopranoVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by sopranoParser#lista_size.
-    def visitLista_size(self, ctx:sopranoParser.Lista_sizeContext):
+    # Visit a parse tree produced by sopranoParser#listaSize.
+    def visitListaSize(self, ctx:sopranoParser.ListaSizeContext):
         return self.visitChildren(ctx)
 
 

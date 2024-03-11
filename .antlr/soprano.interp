@@ -85,13 +85,13 @@ escritura
 condicion
 iteracion
 procedimiento
-llamada_procedimiento
+llamadaProcedimiento
 paramsId
 paramsExpr
 asignacion
 reproduccion
 lista
-lista_size
+listaSize
 consult
 cut
 push
