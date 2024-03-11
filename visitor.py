@@ -187,3 +187,8 @@ class Visitor(sopranoVisitor):
         else:
             self.procs[name] = Procedimiento(name, params, ctx.inss())
 
+    def visitString(self, ctx):
+        # Regresar texto sin comillas "fun" -> fun
+        l = list(ctx.getChildren())
+        s = l[0].getText()
+        return s[1:-1]
