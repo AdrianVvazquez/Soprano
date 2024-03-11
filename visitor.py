@@ -167,7 +167,7 @@ class Visitor(sopranoVisitor):
             t = k[:1] + "'" + k[1:]
             self.partituras.append(t)
 
-    def visitLlamada_procedimiento(self, ctx):
+    def visitLlamadaProcedimiento(self, ctx):
         l = list(ctx.getChildren())
         name = l[0].getText()
         # Obtener lista de parámetros(paramsExp)
@@ -192,3 +192,28 @@ class Visitor(sopranoVisitor):
         l = list(ctx.getChildren())
         s = l[0].getText()
         return s[1:-1]
+    
+    def visitMult(self, ctx):
+        l = list(ctx.getChildren())
+        return self.visit(l[0]) * self.visit(l[2])
+    
+    def visitDivide(self, ctx):
+        l = list(ctx.getChildren())
+        divisor = self.visit(l[2])
+        if divisor == 0:
+            raise SopranoException('Division by zero.')
+        else:
+            return self.visit(l[0]) / divisor
+        
+    def visitModulo(self, ctx):
+        l = list(ctx.getChildren())
+        return self.visit(l[0]) % self.visit(l[2])
+        
+    def visitSuma(self, ctx):
+        l = list(ctx.getChildren())
+        return self.visit(l[0]) + self.visit(l[2])
+        
+    def visitResta(self, ctx):
+        l = list(ctx.getChildren())
+        return self.visit(l[0]) - self.visit(l[2])
+        
