@@ -3,6 +3,8 @@
 ## Soprano
 Soprano es un lenguaje de programación musical orientado a la composición algorítmica. Es decir, que compone música mediante algoritmos, usando estructuras definidas y una sintaxis específica.
 Soprano permite escribir programas sencillos de forma similar a los lenguajes de programación habituales como C, Python o Java. 
+Su gramática está escrita con ANTLR y python.
+
 **Compilar gramática: **
 \```python
 antlr4 -Dlanguage=Python3 -no-listener -visitor soprano.g
@@ -18,3 +20,8 @@ python3 test.py input.txt
 \```
 
 ![Diagrama del intérprete](image.png)
+
+## Programas externos
+* LilyPond: Para generar las partituras. Lilypond ya genera MIDI y PDF. 
+* timidity++: Para generar WAV a partir de MIDI. 
+* ffmpeg: Para generar MP3 a partir de WAV.
