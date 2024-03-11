@@ -5,7 +5,7 @@ class SopranoException(Exception):
     def __init__(self, message):
         self.message = 'Error' + message
 
-class Proceso():
+class Procedimiento():
     def __init__(self, name, params, inss):
         self.name = name
         self.params = params
@@ -100,16 +100,16 @@ class Visitor(sopranoVisitor):
             
           
     def visitParamsId(self,ctx):
+    # Regresa una lista con los ids para los parámetros
         lista = []
         for param in list(ctx.getChildren()):
-            # Agregar el nombre del parámetro a la lista
             lista.append(param.getText())
         return lista
 
     def visitParamsExpr(self,ctx):
+    # Evalua expresiones y regresa una lista con los resultados
         lista = []
         for param in list(ctx.getChildren()):
-            # Evaluar expresión y agregar el resultado a la lista
             lista.append(self.visit(param))
         return lista
 
@@ -167,6 +167,23 @@ class Visitor(sopranoVisitor):
             t = k[:1] + "'" + k[1:]
             self.partituras.append(t)
 
+    def visitLlamada_procedimiento(self, ctx):
+        l = list(ctx.getChildren())
+        name = l[0].getText()
+        # Obtener lista de parámetros(paramsExp)
+        params = self.visit(l[1]) 
+        if name in self.procs:
+            self.__proc__(name, params)
+        else:
+            raise SopranoException('Procedure \"'+ name + '\" non defined.')
 
+    def visitProcedimiento(self, ctx):
+        l = list(ctx.getChildren())
+        name = l[0].getText()
+        # Obtener lista con parámetros(paramsId)
+        params = self.visit(l[1]) 
+        if name in self.procs:
+            raise SopranoException('Procedure \"'+ name + '\" already defined.')
+        else:
+            self.procs[name] = Procedimiento(name, params, ctx.inss())
 
-    
