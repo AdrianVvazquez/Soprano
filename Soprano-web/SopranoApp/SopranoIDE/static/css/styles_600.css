@@ -1,0 +1,17 @@
+#container-ide {
+    display: block;
+}
+
+.lado-izq {
+    width: 95%;
+    margin: 0 auto 1rem;
+}
+
+html, textarea {
+    font-size: large;
+}
+
+.lado-der {
+    width: 95%;
+    margin: 0 auto;
+}

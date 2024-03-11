@@ -22,9 +22,11 @@ def index():
         entry_Proc = request.form['first_proc']
         
         if not file_name or not source_code or not entry_Proc:
-            flash('Todos los campos son requeridos.')
+            flash('Todos los campos son requeridos.', 'error')
             return render_template('sopranoIDE/index.html')
-        
+        if len(source_code) > 3070:
+            flash('Tu código sobrepasa el límite de carácteres.', 'error')
+            return render_template('sopranoIDE/index.html')
         # secure filename
         filename = secure_filename(file_name)
         # write source file 
@@ -32,21 +34,25 @@ def index():
         try:
             with open(file_path, 'w') as f:
                 f.write(source_code)
-            # run Soprano interpreter
-            flash("[DEBUG] Starting running interpreter.")
+
+            flash("Starting running interpreter.", 'debug')
             soprano.run_soprano(file_path, entry_Proc)
-            flash("[INFO] Descargando archivos...")
+            flash("Descargando archivos...", 'info')
+
+            # return render_template('sopranoIDE/index.html', [])
             return redirect(url_for('sopranoIDE.download_folder',filename=filename))
+            
         except FileNotFoundError as e:
-            flash('[ERROR] No se pudo crear el archivo.')
+            flash('No se pudo crear el archivo.', 'error')
         except FileExistsError as e:
-            flash("[ERROR] Ya existe un archivo con este nombre.")
+            flash("Ya existe un archivo con este nombre.", 'error')
         except Exception as e:
             if e.args:
                 error_code = e.args[0]
-                flash(f'[ERROR: {error_code}] {e}')
+                flash(f'[ERROR: {error_code}] {e}', 'error')
             else:
-                flash(e)
+                flash(e, 'error')
+            return render_template('sopranoIDE/index.html')
         
     return render_template('sopranoIDE/index.html')
 

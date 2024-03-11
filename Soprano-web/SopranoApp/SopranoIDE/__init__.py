@@ -26,12 +26,9 @@ def create_app(test_config=None):
     except OSError:
         pass
 
-    from . import db
-    db.init_app(app)
+    # from . import db
+    # db.init_app(app)
 
-    from . import auth
-    app.register_blueprint(auth.bp)
-    
     from . import sopranoIDE
     app.register_blueprint(sopranoIDE.bp)
     app.add_url_rule('/', endpoint='index')

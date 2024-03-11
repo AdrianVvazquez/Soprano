@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% block head %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" media="only screen and (max-width: 600px)" href="{{ url_for('static', filename='css/styles_600.css') }}">
+    <!-- <link rel="stylesheet" media="only screen and (min-width: 1025px)" href="./css/styles-1025.css">
+      <link rel="stylesheet" media="only screen and (min-width: 601px) and (max-width: 1024px)" href="./css/styles-1024-600.css"> -->
+      <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <title>{% block title %}{% endblock %} - Soprano</title>
+    {% endblock %}
+</head>
+<body>
+  
+  <header>
+    {% include 'header.html' %}
+  </header>
+  
+  <main>
+    <div id="content">{% block content %}{% endblock %}</div>
+    <div id="footer">
+      {% block footer %}
+      &copy; Copyright 2024 by <a href="https://github.com/AdrianVvazquez/Soprano">AdrianVvazquez</a>.
+      {% endblock %}
+    </div>
+  </main>
+
+  <script src="{{url_for('static', filename='js/readCode.js')}}"></script>
+</body>
+</html>
+

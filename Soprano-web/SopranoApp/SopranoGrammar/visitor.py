@@ -226,8 +226,6 @@ class Visitor(sopranoVisitor):
 
     def visitProcedimiento(self, ctx):
         l = list(ctx.getChildren())
-        if(l[2] != "|:" or l[-1] != ":|"):
-            raise SopranoException('Se esperaba |: :|')
         name = l[0].getText()
         # Obtener lista con paramsId
         params = self.visit(l[1]) 

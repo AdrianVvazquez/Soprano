@@ -21,4 +21,4 @@ rm installed.txt
 cd SopranoApp
 
 # Ejecuta el comando Flask con la opción de depuración
-flask --app SopranoIDE run --debug
+flask --app SopranoIDE.py --debug run

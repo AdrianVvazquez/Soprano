@@ -1,0 +1,203 @@
+html { 
+    font-family: Geneva, Tahoma, sans-serif;
+    background: #eee; 
+    font-size: 1.125rem;
+
+}
+
+body {
+    margin: 0;
+}
+
+input:focus { outline: none; }
+a { color: #377ba8; }
+hr { border: none; border-top: 1px solid lightgray; }
+nav { background: #4d31a295; height: 80px; align-content: center;}
+nav .logo { width: fit-content; margin: 0 auto; min-width: 100px;}
+
+#container-ide {
+    display: flex;
+    justify-content: center;
+    margin: .8rem auto;
+    max-width: 960px;
+    height: auto;
+}
+
+.lado-izq {
+    background-color: #6a4fbc95;
+    border-radius: 1rem;
+    width: 70%;
+    margin: 0 .25rem 0 .5rem;
+}
+
+.lado-der {
+    background-color: #6a4fbc95;
+    border-radius: 1rem;
+    width: 30%;
+    padding: .5rem;
+    margin: 0 .5rem 0 .25rem;
+}
+
+.lado-der .glass-container{
+    height: 220px;
+    text-align: center;
+}
+
+#codigo {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    width: 100%;
+    padding: .5em;
+    resize: none;
+    border-radius: 0 0 1rem 1rem;
+}
+
+#codigo:focus{
+    outline: none;
+}
+
+#codigo:valid {
+    border: 2px solid lime;
+}
+
+/* Green and red buttons */
+
+.red-play-button{
+    align-content: center;
+    background-color: red;
+    color: #FFF;
+    border-radius: .3rem;
+    border: none;
+    cursor: pointer;
+    padding: .5em 1em; 
+    font-weight: bold;
+    text-transform: uppercase;
+    transition: background-color 0.3s;
+}
+
+.red-play-button:hover {
+    background-color: #cc0000;
+}
+
+.green-play-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+
+/* tooltip styles */
+
+.tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip .tooltip-text {
+    visibility: hidden;
+    width: 60px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -50%;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.tooltip .tooltip-text::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #555 transparent transparent transparent;
+}
+
+.tooltip:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* other styles */
+
+#footer {
+    background-color: #4d31a295;
+    padding: 1em;
+    text-align: center;
+}
+
+.error {
+    background-color: red;
+    border-radius: 5px;
+    color: white;
+    padding: 5px;
+    margin: 5px;
+    width: fit-content;
+}
+
+.archivo-info{
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #6a4fbc95;
+    padding: .3rem .6rem;
+}
+
+#submit-code svg{
+    vertical-align: middle;
+    padding: .5rem;
+}
+
+#submit-code :hover{
+    fill: #00c200;
+}
+
+.archivo-info input{
+    background-color: #6a4fbc;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: .3em;
+}
+
+.archivo-info input::placeholder{
+    color: white;
+    opacity: .6;
+}
+.archivo-info input::-ms-input-placeholder { /* Edge 12 -18 */
+    color: white;
+    opacity: .6;
+}
+
+.glass-container {
+    background: rgba(255, 255, 255, 0.2); /* Color de fondo con transparencia */
+    border-radius: .5rem; /* Bordes redondeados */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra suave */
+    backdrop-filter: blur(10px); /* Filtro de desenfoque para el efecto de vidrio */
+}
+
+/* flash messages styles */
+
+.flash {
+    margin: 10px;
+}
+
+.flash small {
+    background-color: #d91313d6; 
+    border-radius: 10px; 
+    cursor: pointer; 
+    margin:0; 
+    width:50px; 
+    text-align: center; 
+    padding: 5px;
+}

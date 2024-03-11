@@ -1,30 +1,23 @@
-{% extends "sopranoIDE/layout.html" %}
+{% extends "layout.html" %}
 
 {% block title %}Inicio{% endblock %}
 
 {% block content %}
 
   {% for file in files %}
-    <article class="file">
-      <header>
-        <div>
-          <h1>{{ file['title'] }}</h1>
-          <div class="about">by {{ file['username'] }} on {{ file['created'].strftime('%Y-%m-%d') }}</div>
-        </div>
-        {% if g.user['id'] == file['author_id'] %}
-          <a class="action" href="{{ url_for('blog.update', id=file['id']) }}">Edit</a>
-        {% endif %}
-      </header>
-      <p class="body">{{ file['body'] }}</p>
-    </article>
-    {% if not loop.last %}
-      <hr>
-    {% endif %}
+  <header>
+    <div>
+      <h1>{{ file['title'] }}</h1>
+      <div class="about">by {{ file['username'] }} on {{ file['created'].strftime('%Y-%m-%d') }}</div>
+    </div>
+  </header>
   {% endfor %}
 
   <div id="container-ide">
-    {% include 'sopranoIDE/ladoIzquierdo.html' %}
-    {% include 'sopranoIDE/ladoDerecho.html' %}
+    <!-- <div class="container"> -->
+      {% include 'sopranoIDE/ladoIzquierdo.html' %}
+      {% include 'sopranoIDE/ladoDerecho.html' %}
+    <!-- </div> -->
   </div>
 
 {% endblock %}
