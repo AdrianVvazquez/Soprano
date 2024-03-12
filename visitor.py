@@ -217,3 +217,31 @@ class Visitor(sopranoVisitor):
         l = list(ctx.getChildren())
         return self.visit(l[0]) - self.visit(l[2])
         
+    def visitVariable(self, ctx):
+        # access stack and get the value. self.stack[i]={}
+        return self.stack[-1][ctx.VAR().getText()]
+    
+    def visitNumero(self, ctx):
+        return int(ctx.NUM().getText())
+    
+    def visitList(self, ctx):
+        l = list(ctx.getChildren())
+        values = [self.visit(child) for child in l[1:-1]]
+        return values
+
+    def visitSizeList(self, ctx):
+        # si variable existe y es una lista, devolver el número de elementos
+        l = list(ctx.getChildren())
+        size = len(self.stack[-1][ctx.VAR().getText()])
+        return size
+
+    def visitConsulta(self, ctx):
+        # En Soprano las listas comienzan por el índice 1, regresar L[i-1]
+        l = list(ctx.getChildren())
+        index = self.visit(l[2])
+        size = len(self.stack[-1][ctx.VAR().getText()])
+        if index < 1 or index > size:
+            raise SopranoException('index' + str(index) + 'does not belong '+ ctx.VAR().getText())
+        else:
+            return (self.stack[-1][ctx.VAR().getText()]) [index-1]
+        
