@@ -245,3 +245,16 @@ class Visitor(sopranoVisitor):
         else:
             return (self.stack[-1][ctx.VAR().getText()]) [index-1]
         
+    def visitPush(self, ctx):
+        l = list(ctx.getChildren())
+        e = self.visit(ctx.expr())
+        self.stack[-1][ctx.VAR().getText()].append(e)
+
+    def visitCut(self, ctx):
+        l = list(ctx.getChildren())
+        expresion = self.visit(ctx.expr())
+        size = len(self.stack[-1][ctx.VAR().getText()])
+        if expresion < 1 or expresion > size:
+            raise SopranoException('index' + str(expresion) + 'does not belong to the list '+ ctx.VAR().getText())
+        else:
+            return 
