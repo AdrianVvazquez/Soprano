@@ -44,6 +44,11 @@ class sopranoVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by sopranoParser#listaSize.
+    def visitListaSize(self, ctx:sopranoParser.ListaSizeContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by sopranoParser#procedimiento.
     def visitProcedimiento(self, ctx:sopranoParser.ProcedimientoContext):
         return self.visitChildren(ctx)
@@ -51,6 +56,11 @@ class sopranoVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by sopranoParser#llamadaProcedimiento.
     def visitLlamadaProcedimiento(self, ctx:sopranoParser.LlamadaProcedimientoContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by sopranoParser#asignacion.
+    def visitAsignacion(self, ctx:sopranoParser.AsignacionContext):
         return self.visitChildren(ctx)
 
 
@@ -64,28 +74,8 @@ class sopranoVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by sopranoParser#asignacion.
-    def visitAsignacion(self, ctx:sopranoParser.AsignacionContext):
-        return self.visitChildren(ctx)
-
-
     # Visit a parse tree produced by sopranoParser#reproduccion.
     def visitReproduccion(self, ctx:sopranoParser.ReproduccionContext):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by sopranoParser#lista.
-    def visitLista(self, ctx:sopranoParser.ListaContext):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by sopranoParser#listaSize.
-    def visitListaSize(self, ctx:sopranoParser.ListaSizeContext):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by sopranoParser#consult.
-    def visitConsult(self, ctx:sopranoParser.ConsultContext):
         return self.visitChildren(ctx)
 
 
@@ -94,8 +84,18 @@ class sopranoVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by sopranoParser#consult.
+    def visitConsult(self, ctx:sopranoParser.ConsultContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by sopranoParser#push.
     def visitPush(self, ctx:sopranoParser.PushContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by sopranoParser#lista.
+    def visitLista(self, ctx:sopranoParser.ListaContext):
         return self.visitChildren(ctx)
 
 

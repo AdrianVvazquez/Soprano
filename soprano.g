@@ -15,19 +15,32 @@ escritura: '<w>' expr+;
 condicion: 'if' expr LB inss RB ('else' LB inss RB)?; // 1 o ningun else
 iteracion: 'while' expr LB inss RB;
 
+NOTA: [A-G][0-9]?;
+
+PROCNAME: [A-Z][a-zA-Z0-9_]*;
 procedimiento: PROCNAME paramsId LB inss RB;
 llamadaProcedimiento: PROCNAME paramsExpr;
+
+asignacion: VAR ASSIGN expr;
+ASSIGN: '<-';
 
 paramsId: (VAR)*;
 paramsExpr: (expr)*;
 
-asignacion: VAR ASSIGN expr;
 reproduccion: REPROD expr;
-lista: LC expr* RC;
-listaSize: SIZE VAR;
-consult: VAR LS expr RS;
+REPROD: '(:)';
+
 cut: CORTA VAR LS expr RS;
+CORTA: '8<';
+
+consult: VAR LS expr RS;
+
 push: VAR AGREGA expr;
+AGREGA: '<<';
+
+lista: '{' expr* '}';
+listaSize: SIZE VAR;
+SIZE: '#';
 
 expr: expr MUL expr     # Mult
     | expr DIV expr     # Divide
@@ -56,16 +69,8 @@ LB: '|:';
 RB: ':|';
 LS: '[';
 RS: ']';
-LC: '{';
-RC: '}';
 LP: '(';
 RP: ')';
-
-ASSIGN: '<-';
-SIZE: '#';
-CORTA: '8<';
-AGREGA: '<<';
-REPROD: '(:)';
 
 MUL: '*';
 DIV: '/';
@@ -80,10 +85,8 @@ GET: '>=';
 LET: '<=';
 
 
-PROCNAME: [A-Z][a-zA-Z0-9]*;
-NOTA: [A-G][0-9]?;
 VAR: [a-zA-Z][a-zA-Z0-9]*;
-NUM: '-'? [0-9]+('.'[0-9]+)?;
-STRING: '"' ('\\' . | ~ ('\\'|'"'))* '"';
+NUM: '-'? [0-9]+;
+STRING: '"' ( '\\' . | ~('\\'|'"'))* '"';
 COMMENT: '###' ~[\r\n]* -> skip;
-WS: [\t\r\n]+ -> skip;      // omitir espacios en blanco
+WS: [ \t\r\n]+ -> skip;      // omitir espacios en blanco
