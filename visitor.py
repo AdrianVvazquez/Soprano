@@ -1,5 +1,12 @@
+import os
 from collections import defaultdict
 from sopranoVisitor import sopranoVisitor
+
+class bcolors:
+    OK = "\033[92m"  # GREEN
+    WARNING = "\033[93m"  # YELLOW
+    FAIL = "\033[91m"  # RED
+    RESET = "\033[0m"  # RESET COLOR
 
 class SopranoException(Exception):
     def __init__(self, message):
@@ -16,7 +23,7 @@ class Visitor(sopranoVisitor):
         self.entryProc = entryProc
         self.entryParams = entryParams
     
-        self.procs = []         # procedimientos
+        self.procs = {}         # procedimientos
         self.stack = []         # TABLA DE SÍMBOLOS
         self.partituras = []    # lista para partituras
         
@@ -76,20 +83,53 @@ class Visitor(sopranoVisitor):
 
     def __proc__(self, name, paramsValues):
         # error handling
+        print("[DEBUG]", name, len(self.procs[name].params), len(paramsValues))
         if(len(self.procs[name].params) != len(paramsValues)):
-            raise SopranoException('En \"' + name + '\" proc se esperaba' + str(len(self.procs[name].params))+ 'param(s), '+ str(len(paramsValues))+ ' param(s) recibidos.')
+            raise SopranoException('En \"' + name + '\" proc se esperaba ' + str(len(self.procs[name].params))+ ' param(s), '+ str(len(paramsValues))+ ' param(s) recibidos.')
         
+        # Lista de variables locales 
         newvars = defaultdict(lambda:0)
         for param, value in zip(self.procs[name].params, paramsValues):
             newvars[param] = value
 
-        self.stack.append(newvars)          # Agregamos los argumentos del procedimiento
-        self.visit(self.procs[name].inss)   # Ejecutamos el procedimiento
+        print("[DEBUG] NEWVARS:" ,newvars)
+        print("###############################")
+        self.stack.append(newvars)          # Agregamos los argumentos del procedimiento a las variables locales
+        print(self.stack)
+        self.visit(self.procs[name].inss)   # Ejecutamos la lista de instrucciones del proc
         self.stack.pop()                    # Sacamos los argumentos que no necesitamos
         
     def visitRoot(self,ctx):
+        # Guardar todos los procedimientos
+        print("[DEBUG] VISIT PROCEDIMIENTOS")
         for proc in list(ctx.getChildren()):
             self.visit(proc)
+
+        # Ejecutar procedimientos
+        print("[DEBUG] procs ",self.procs)
+        print("[DEBUG] RUN PROCEDIMIENTOS")
+        self.__proc__(self.entryProc,self.entryParams)
+        
+        absolute_path = os.path.dirname(os.path.abspath(__file__))
+        notas_partitura = ' '.join(map(str,self.partituras))
+        notas = notas_partitura.lower()
+
+        print("Generating lilypond...")
+        file = open(absolute_path + __file__ + "/music.ly", "w")
+        file.write("\\version \"2.20.0\"" + os.linesep)
+        file.write("\score {" + os.linesep)
+        file.write("\t \\absolute {" + os.linesep)
+        file.write("\t\t" + "\\tempo 4 = 120" + os.linesep)
+        file.write("\t\t" + notas + os.linesep)
+        file.write("\t }" + os.linesep)
+        file.write("\t \layout { }" + os.linesep)
+        file.write("\t \midi { }" + os.linesep)
+        file.write("}")
+        file.close()
+
+        os.system('lilypond music.ly')
+        os.system('timidity -Ow -o music.wav music.midi')
+        os.system('ffmpeg -i music.wav -codec:a libmp3lame -qscale:a 2 music.mp3')
             
     def visitInss(self,ctx):
         for ins in list(ctx.getChildren()):
@@ -209,42 +249,320 @@ class Visitor(sopranoVisitor):
         l = list(ctx.getChildren())
         return self.visit(l[0]) % self.visit(l[2])
         
-    def visitSuma(self, ctx):
-        l = list(ctx.getChildren())
-        return self.visit(l[0]) + self.visit(l[2])
-        
-    def visitResta(self, ctx):
-        l = list(ctx.getChildren())
-        return self.visit(l[0]) - self.visit(l[2])
-        
     def visitVariable(self, ctx):
         # access stack and get the value. self.stack[i]={}
         return self.stack[-1][ctx.VAR().getText()]
     
-    def visitNumero(self, ctx):
+    def visitNumber(self, ctx):
         return int(ctx.NUM().getText())
     
-    def visitList(self, ctx):
+    def visitLista(self, ctx):
         l = list(ctx.getChildren())
         values = [self.visit(child) for child in l[1:-1]]
         return values
 
-    def visitSizeList(self, ctx):
+    def visitListaSize(self, ctx):
         # si variable existe y es una lista, devolver el número de elementos
-        l = list(ctx.getChildren())
-        size = len(self.stack[-1][ctx.VAR().getText()])
-        return size
+        if self.stack[-1][ctx.VAR().getText()]:
+            print(self.stack)
+            if isinstance(self.stack[-1][ctx.VAR().getText()], list):
+                size = len(self.stack[-1][ctx.VAR().getText()])
+                return size
+            else:
+                raise SopranoException("Variable " + ctx.VAR().getText()+ " is not a list.")
+        else:
+            raise SopranoException("Variable " + ctx.VAR().getText()+ " is not defined in the scope.")
 
-    def visitConsulta(self, ctx):
+
+    def visitConsult(self, ctx):
         # En Soprano las listas comienzan por el índice 1, regresar L[i-1]
         l = list(ctx.getChildren())
-        index = self.visit(l[2])
+        index = self.visit(ctx.expr())
         size = len(self.stack[-1][ctx.VAR().getText()])
         if index < 1 or index > size:
-            raise SopranoException('index' + str(index) + 'does not belong '+ ctx.VAR().getText())
+            raise SopranoException(bcolors.FAIL+'index ' + str(index) + ' does not belong to variable '+ ctx.VAR().getText()+bcolors.RESET)
         else:
-            return (self.stack[-1][ctx.VAR().getText()]) [index-1]
+            return ((self.stack[-1][ctx.VAR().getText()]) [index-1])
         
+    def visitNota(self,ctx):        
+        note = ctx.NOTA().getText()
+        if len(note) == 1:
+            return f'{note}4'
+        else: # len(note) == 1
+            return note
+        
+    def visitParents(self,ctx):
+        l = list(ctx.getChildren())
+        return self.visit(l[1])
+    
+    def visitSuma(self,ctx):
+        l = list(ctx.getChildren())
+        # Sum pure_note + integer
+        if (ctx.getChild(0).getText() in self.notas.keys()):
+            note = ctx.expr(0).getText()
+            val1 = self.notas[note]
+            result = val1 + self.visit(l[2])
+            for key,value in self.notas.items():
+                if result == value:
+                    return key
+                
+        # Sum integer + pure_note
+        elif (ctx.getChild(2).getText() in self.notas.keys()):
+            note = ctx.expr(1).getText()
+            val1 = self.notas[note]
+            result = val1 + self.visit(l[0])
+            for key,value in self.notas.items():
+                if result == value:
+                    return key
+       
+        # Sum variable_note + integer
+        elif(self.stack[-1][ctx.expr(0).getText()] in self.notas.keys()):
+            note = self.stack[-1][ctx.expr(0).getText()]
+            val1 = self.notas[note]
+            result = val1 + self.visit(l[2])
+            for key,value in self.notas.items():
+                if result == value:
+                    return key
+       
+       # Sum integer + variable_note
+        elif(self.stack[-1][ctx.expr(1).getText()] in self.notas.keys()):
+            note = self.stack[-1][ctx.expr(1).getText()]
+            val1 = self.notas[note]
+            result = val1 + self.visit(l[0]) 
+            for key,value in self.notas.items():
+                if result == value:
+                    return key
+       # Sum integer + integer
+        else:
+            return self.visit(l[0]) + self.visit(l[2])
+    
+    def visitResta(self,ctx):
+        l = list(ctx.getChildren())
+        # Restar pure_note - integer
+        if (ctx.getChild(0).getText() in self.notas.keys()):
+            note = ctx.expr(0).getText()
+            val1 = self.notas[note]
+            result = val1 - self.visit(l[2])
+            for key,value in self.notas.items():
+                if result == value:
+                    return key
+                
+        # Restar integer - note
+        elif (ctx.getChild(2).getText() in self.notas.keys()):
+            note = ctx.expr(1).getText()
+            val1 = self.notas[note]
+            result = val1 - self.visit(l[0])
+            for key,value in self.notas.items():
+                if result == value:
+                    return key
+       
+        # Restar nota_en_variable - entero
+        elif(self.stack[-1][ctx.expr(0).getText()] in self.notas.keys()):
+            note = self.stack[-1][ctx.expr(0).getText()]
+            val1 = self.notas[note]
+            result = val1 - self.visit(l[2])
+            for key,value in self.notas.items():
+                if result == value:
+                    return key
+       
+       # Restar entero - nota_en_variable
+        elif(self.stack[-1][ctx.expr(1).getText()] in self.notas.keys()):
+            note = self.stack[-1][ctx.expr(1).getText()]
+            val1 = self.notas[note]
+            result = val1 - self.visit(l[0]) 
+            for key,value in self.notas.items():
+                if result == value:
+                    return key
+       # Sum integer + integer
+        else:
+            return self.visit(l[0]) + self.visit(l[2])
+        
+    def visitLessThan(self, ctx):
+        l = list(ctx.getChildren())
+
+        a = (self.stack[-1][ctx.expr(0).getText()] in self.notas.keys())
+        b = (self.stack[-1][ctx.expr(1).getText()] in self.notas.keys())
+
+        if a and b:
+            note1 = self.stack[-1][ctx.expr(0).getText()]
+            val1 = self.notas[note1]
+            note2 = self.stack[-1][ctx.expr(1).getText()]
+            val2 = self.notas[note2]
+            return int(val1 < val2)
+        elif a:
+            note1 = self.stack[-1][ctx.expr(0).getText()]
+            val1 = self.notas[note1]
+            note2 = ctx.expr(1).getText()
+            val2 = self.notas[note2]
+            return int(val1 < val2)
+        # nota < nota_en_variable
+        elif b:
+            note1 = ctx.expr(0).getText()
+            val1 = self.notas[note1]
+            note2 = self.stack[-1][ctx.expr(1).getText()]
+            val2 = self.notas[note2]
+            return int(val1 < val2)
+        # integer < integer
+        else: 
+            return int(self.visit(l[0]) < self.visit(l[2])) 
+
+    def visitGreaterThan(self, ctx):
+        l = list(ctx.getChildren())
+
+        print(ctx.expr(0).getText())
+        print(ctx.expr(1).getText())
+        a = (self.stack[-1][ctx.expr(0).getText()] in self.notas.keys())
+        b = (self.stack[-1][ctx.expr(1).getText()] in self.notas.keys())
+
+        # variable_note > variable_note
+        if a and b:
+            note1 = self.stack[-1][ctx.expr(0).getText()]
+            val1 = self.notas[note1]
+            note2 = self.stack[-1][ctx.expr(1).getText()]
+            val2 = self.notas[note2]
+            return int(val1 > val2)
+        # pure_note > variable_note
+        if a:
+            note1 = self.stack[-1][ctx.expr(0).getText()]
+            val1 = self.notas[note1]
+            note2 = ctx.expr(1).getText()
+            val2 = self.notas[note2]
+            return int(val1 > val2)
+        # nota > variable
+        if b:
+            note1 = ctx.expr(0).getText()
+            val1 = self.notas[note1]
+            note2 = self.stack[-1][ctx.expr(1).getText()]
+            val2 = self.notas[note2]
+            return int(val1 > val2)
+        # integer > integer
+        else: 
+            return int(self.visit(l[0]) > self.visit(l[2]))
+
+    def visitEqual(self, ctx):
+        l = list(ctx.getChildren())
+
+        a = (self.stack[-1][ctx.expr(0).getText()] in self.notas.keys())
+        b = (self.stack[-1][ctx.expr(1).getText()] in self.notas.keys())
+
+        # variable_note > variable_note
+        if a and b:
+            note1 = self.stack[-1][ctx.expr(0).getText()]
+            val1 = self.notas[note1]
+            note2 = self.stack[-1][ctx.expr(1).getText()]
+            val2 = self.notas[note2]
+            return int(val1 == val2)
+        # pure_note > variable_note
+        elif a:
+            note1 = self.stack[-1][ctx.expr(0).getText()]
+            val1 = self.notas[note1]
+            note2 = ctx.expr(1).getText()
+            val2 = self.notas[note2]
+            return int(val1 == val2)
+        # nota < variable
+        elif b:
+            note1 = ctx.expr(0).getText()
+            val1 = self.notas[note1]
+            note2 = self.stack[-1][ctx.expr(1).getText()]
+            val2 = self.notas[note2]
+            return int(val1 == val2)
+        # integer < integer
+        else: 
+            return int(self.visit(l[0]) == self.visit(l[2])) 
+
+    def visitNotEqual(self, ctx):
+        l = list(ctx.getChildren())
+
+        a = (self.stack[-1][ctx.expr(0).getText()] in self.notas.keys())
+        b = (self.stack[-1][ctx.expr(1).getText()] in self.notas.keys())
+
+        # variable_note > variable_note
+        if a and b:
+            note1 = self.stack[-1][ctx.expr(0).getText()]
+            val1 = self.notas[note1]
+            note2 = self.stack[-1][ctx.expr(1).getText()]
+            val2 = self.notas[note2]
+            return int(val1 != val2)
+        # pure_note > variable_note
+        elif a:
+            note1 = self.stack[-1][ctx.expr(0).getText()]
+            val1 = self.notas[note1]
+            note2 = ctx.expr(1).getText()
+            val2 = self.notas[note2]
+            return int(val1 != val2)
+        # nota < variable
+        elif b:
+            note1 = ctx.expr(0).getText()
+            val1 = self.notas[note1]
+            note2 = self.stack[-1][ctx.expr(1).getText()]
+            val2 = self.notas[note2]
+            return int(val1 != val2)
+        # integer < integer
+        else: 
+            return int(self.visit(l[0]) != self.visit(l[2])) 
+
+    def visitLessOrEqualThan(self, ctx):
+        l = list(ctx.getChildren())
+
+        a = (self.stack[-1][ctx.expr(0).getText()] in self.notas.keys())
+        b = (self.stack[-1][ctx.expr(1).getText()] in self.notas.keys())
+
+        # variable_note > variable_note
+        if a and b:
+            note1 = self.stack[-1][ctx.expr(0).getText()]
+            val1 = self.notas[note1]
+            note2 = self.stack[-1][ctx.expr(1).getText()]
+            val2 = self.notas[note2]
+            return int(val1 <= val2)
+        # pure_note > variable_note
+        elif a:
+            note1 = self.stack[-1][ctx.expr(0).getText()]
+            val1 = self.notas[note1]
+            note2 = ctx.expr(1).getText()
+            val2 = self.notas[note2]
+            return int(val1 <= val2)
+        # nota < variable
+        elif b:
+            note1 = ctx.expr(0).getText()
+            val1 = self.notas[note1]
+            note2 = self.stack[-1][ctx.expr(1).getText()]
+            val2 = self.notas[note2]
+            return int(val1 <= val2)
+        # integer < integer
+        else: 
+            return int(self.visit(l[0]) <= self.visit(l[2])) 
+
+    def visitGreaterOrEqualThan(self, ctx):
+        l = list(ctx.getChildren())
+
+        a = (self.stack[-1][ctx.expr(0).getText()] in self.notas.keys())
+        b = (self.stack[-1][ctx.expr(1).getText()] in self.notas.keys())
+
+        # variable_note > variable_note
+        if a and b:
+            note1 = self.stack[-1][ctx.expr(0).getText()]
+            val1 = self.notas[note1]
+            note2 = self.stack[-1][ctx.expr(1).getText()]
+            val2 = self.notas[note2]
+            return int(val1 >= val2)
+        # pure_note > variable_note
+        elif a:
+            note1 = self.stack[-1][ctx.expr(0).getText()]
+            val1 = self.notas[note1]
+            note2 = ctx.expr(1).getText()
+            val2 = self.notas[note2]
+            return int(val1 >= val2)
+        # nota < variable
+        elif b:
+            note1 = ctx.expr(0).getText()
+            val1 = self.notas[note1]
+            note2 = self.stack[-1][ctx.expr(1).getText()]
+            val2 = self.notas[note2]
+            return int(val1 >= val2)
+        # integer < integer
+        else: 
+            return int(self.visit(l[0]) >= self.visit(l[2])) 
+
     def visitPush(self, ctx):
         l = list(ctx.getChildren())
         e = self.visit(ctx.expr())
@@ -257,4 +575,4 @@ class Visitor(sopranoVisitor):
         if expresion < 1 or expresion > size:
             raise SopranoException('index' + str(expresion) + 'does not belong to the list '+ ctx.VAR().getText())
         else:
-            return 
+            del((self.stack[-1][ctx.VAR().getText()])[expresion-1])
