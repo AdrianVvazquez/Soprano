@@ -375,7 +375,7 @@ class Visitor(sopranoVisitor):
                     return key
        # Sum integer + integer
         else:
-            return self.visit(l[0]) + self.visit(l[2])
+            return self.visit(l[0]) - self.visit(l[2])
         
     def visitLessThan(self, ctx):
         l = list(ctx.getChildren())
