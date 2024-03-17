@@ -84,7 +84,7 @@ class Visitor(sopranoVisitor):
     def __proc__(self, name, paramsValues):
         # error handling
         if(len(self.procs[name].params) != len(paramsValues)):
-            raise SopranoException('En \"' + name + '\" proc se esperaba ' + str(len(self.procs[name].params))+ ' param(s), '+ str(len(paramsValues))+ ' param(s) recibidos.')
+            raise SopranoException(bcolors.FAIL+'En \"' + name + '\" proc se esperaba ' + str(len(self.procs[name].params))+ ' param(s), '+ str(len(paramsValues))+ ' param(s) recibidos.'+bcolors.RESET)
         
         # Lista de variables locales 
         newvars = defaultdict(lambda:0)
@@ -107,7 +107,7 @@ class Visitor(sopranoVisitor):
         notas_partitura = ' '.join(map(str,self.partituras))
         notas = notas_partitura.lower()
 
-        print("Generating FILES...")
+        print(bcolors.OK+"Generating FILES..."+bcolors.RESET)
         file = open(f'{absolute_path}/{self.file_name}.ly', "w")
         file.write("\\version \"2.20.0\"" + os.linesep)
         file.write("\score {" + os.linesep)
@@ -123,6 +123,7 @@ class Visitor(sopranoVisitor):
         os.system(f'lilypond {self.file_name}.ly')
         os.system(f'timidity -Ow -o {self.file_name}.wav {self.file_name}.midi')
         os.system(f'ffmpeg -i {self.file_name}.wav -codec:a libmp3lame -qscale:a 2 {self.file_name}.mp3')
+        print(bcolors.OK+"[STATUS] Ok."+bcolors.RESET)
             
     def visitInss(self,ctx):
         for ins in list(ctx.getChildren()):
@@ -208,7 +209,7 @@ class Visitor(sopranoVisitor):
         if name in self.procs:
             self.__proc__(name, params)
         else:
-            raise SopranoException('Procedure \"'+ name + '\" non defined.')
+            raise SopranoException(bcolors.FAIL+'Procedure \"'+ name + '\" non defined.'+bcolors.RESET)
 
     def visitProcedimiento(self, ctx):
         l = list(ctx.getChildren())
@@ -216,7 +217,7 @@ class Visitor(sopranoVisitor):
         # Obtener lista con parámetros(paramsId)
         params = self.visit(l[1]) 
         if name in self.procs:
-            raise SopranoException('Procedure \"'+ name + '\" already defined.')
+            raise SopranoException(bcolors.FAIL+'Procedure \"'+ name + '\" already defined.'+bcolors.RESET)
         else:
             self.procs[name] = Procedimiento(name, params, ctx.inss())
 
@@ -261,9 +262,9 @@ class Visitor(sopranoVisitor):
                 size = len(self.stack[-1][ctx.VAR().getText()])
                 return size
             else:
-                raise SopranoException("Variable " + ctx.VAR().getText()+ " is not a list.")
+                raise SopranoException(bcolors.FAIL+"Variable " + ctx.VAR().getText()+ " is not a list."+bcolors.RESET)
         else:
-            raise SopranoException("Variable " + ctx.VAR().getText()+ " is not defined in the scope.")
+            raise SopranoException(bcolors.FAIL+"Variable " + ctx.VAR().getText()+ " is not defined in the scope."+bcolors.RESET)
 
 
     def visitConsult(self, ctx):
@@ -272,7 +273,7 @@ class Visitor(sopranoVisitor):
         index = self.visit(ctx.expr())
         size = len(self.stack[-1][ctx.VAR().getText()])
         if index < 1 or index > size:
-            raise SopranoException(bcolors.FAIL+'index ' + str(index) + ' does not belong to variable '+ ctx.VAR().getText()+bcolors.RESET)
+            raise SopranoException(bcolors.FAIL+'index ' + str(index) + ' does not belong to variable '+ ctx.VAR().getText()+"."+bcolors.RESET)
         else:
             return ((self.stack[-1][ctx.VAR().getText()]) [index-1])
         
@@ -563,6 +564,6 @@ class Visitor(sopranoVisitor):
         expresion = self.visit(ctx.expr())
         size = len(self.stack[-1][ctx.VAR().getText()])
         if expresion < 1 or expresion > size:
-            raise SopranoException('index' + str(expresion) + 'does not belong to the list '+ ctx.VAR().getText())
+            raise SopranoException(bcolors.FAIL+'index' + str(expresion) + 'does not belong to the list '+ ctx.VAR().getText()+"."+bcolors.RESET)
         else:
             del((self.stack[-1][ctx.VAR().getText()])[expresion-1])
