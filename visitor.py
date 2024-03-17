@@ -19,10 +19,10 @@ class Procedimiento():
         self.inss = inss
 
 class Visitor(sopranoVisitor):
-    def __init__(self, entryProc='Main', entryParams=[]):
+    def __init__(self, file_name, entryProc='Main', entryParams=[]):
         self.entryProc = entryProc
         self.entryParams = entryParams
-    
+        self.file_name = file_name.rsplit(".", 1)[0]
         self.procs = {}         # procedimientos
         self.stack = []         # TABLA DE SÍMBOLOS
         self.partituras = []    # lista para partituras
@@ -83,7 +83,6 @@ class Visitor(sopranoVisitor):
 
     def __proc__(self, name, paramsValues):
         # error handling
-        print("[DEBUG]", name, len(self.procs[name].params), len(paramsValues))
         if(len(self.procs[name].params) != len(paramsValues)):
             raise SopranoException('En \"' + name + '\" proc se esperaba ' + str(len(self.procs[name].params))+ ' param(s), '+ str(len(paramsValues))+ ' param(s) recibidos.')
         
@@ -92,30 +91,24 @@ class Visitor(sopranoVisitor):
         for param, value in zip(self.procs[name].params, paramsValues):
             newvars[param] = value
 
-        print("[DEBUG] NEWVARS:" ,newvars)
-        print("###############################")
         self.stack.append(newvars)          # Agregamos los argumentos del procedimiento a las variables locales
-        print(self.stack)
         self.visit(self.procs[name].inss)   # Ejecutamos la lista de instrucciones del proc
         self.stack.pop()                    # Sacamos los argumentos que no necesitamos
         
     def visitRoot(self,ctx):
         # Guardar todos los procedimientos
-        print("[DEBUG] VISIT PROCEDIMIENTOS")
         for proc in list(ctx.getChildren()):
             self.visit(proc)
 
         # Ejecutar procedimientos
-        print("[DEBUG] procs ",self.procs)
-        print("[DEBUG] RUN PROCEDIMIENTOS")
         self.__proc__(self.entryProc,self.entryParams)
         
         absolute_path = os.path.dirname(os.path.abspath(__file__))
         notas_partitura = ' '.join(map(str,self.partituras))
         notas = notas_partitura.lower()
 
-        print("Generating lilypond...")
-        file = open(absolute_path + __file__ + "/music.ly", "w")
+        print("Generating FILES...")
+        file = open(f'{absolute_path}/{self.file_name}.ly', "w")
         file.write("\\version \"2.20.0\"" + os.linesep)
         file.write("\score {" + os.linesep)
         file.write("\t \\absolute {" + os.linesep)
@@ -127,9 +120,9 @@ class Visitor(sopranoVisitor):
         file.write("}")
         file.close()
 
-        os.system('lilypond music.ly')
-        os.system('timidity -Ow -o music.wav music.midi')
-        os.system('ffmpeg -i music.wav -codec:a libmp3lame -qscale:a 2 music.mp3')
+        os.system(f'lilypond {self.file_name}.ly')
+        os.system(f'timidity -Ow -o {self.file_name}.wav {self.file_name}.midi')
+        os.system(f'ffmpeg -i {self.file_name}.wav -codec:a libmp3lame -qscale:a 2 {self.file_name}.mp3')
             
     def visitInss(self,ctx):
         for ins in list(ctx.getChildren()):
@@ -264,7 +257,6 @@ class Visitor(sopranoVisitor):
     def visitListaSize(self, ctx):
         # si variable existe y es una lista, devolver el número de elementos
         if self.stack[-1][ctx.VAR().getText()]:
-            print(self.stack)
             if isinstance(self.stack[-1][ctx.VAR().getText()], list):
                 size = len(self.stack[-1][ctx.VAR().getText()])
                 return size
@@ -409,8 +401,6 @@ class Visitor(sopranoVisitor):
     def visitGreaterThan(self, ctx):
         l = list(ctx.getChildren())
 
-        print(ctx.expr(0).getText())
-        print(ctx.expr(1).getText())
         a = (self.stack[-1][ctx.expr(0).getText()] in self.notas.keys())
         b = (self.stack[-1][ctx.expr(1).getText()] in self.notas.keys())
 
