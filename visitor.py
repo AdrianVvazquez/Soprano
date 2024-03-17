@@ -109,9 +109,9 @@ class Visitor(sopranoVisitor):
         absolute_path = os.path.dirname(os.path.abspath(__file__))
         notas_partitura = ' '.join(map(str,self.partituras))
         notas = notas_partitura.lower()
-
+        os.mkdir(self.file_name)
         print(bcolors.OK+"Generating FILES..."+bcolors.RESET)
-        file = open(f'{absolute_path}/{self.file_name}.ly', "w")
+        file = open(f'{absolute_path}/{self.file_name}/{self.file_name}.ly', "w")
         file.write("\\version \"2.20.0\"" + os.linesep)
         file.write("\score {" + os.linesep)
         file.write("\t \\absolute {" + os.linesep)
@@ -122,7 +122,7 @@ class Visitor(sopranoVisitor):
         file.write("\t \midi { }" + os.linesep)
         file.write("}")
         file.close()
-
+        os.chdir(f'./{self.file_name}')
         os.system(f'lilypond {self.file_name}.ly')
         os.system(f'timidity -Ow -o {self.file_name}.wav {self.file_name}.midi')
         os.system(f'ffmpeg -i {self.file_name}.wav -codec:a libmp3lame -qscale:a 2 {self.file_name}.mp3')
