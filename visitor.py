@@ -99,6 +99,9 @@ class Visitor(sopranoVisitor):
         # Guardar todos los procedimientos
         for proc in list(ctx.getChildren()):
             self.visit(proc)
+        # No existe proc Main y no se especificó al ejecutar
+        if not self.entryProc in self.procs:
+            raise SopranoException(bcolors.FAIL+"No existe el procedimiento "+self.entryProc+"."+bcolors.RESET)
 
         # Ejecutar procedimientos
         self.__proc__(self.entryProc,self.entryParams)
@@ -497,29 +500,28 @@ class Visitor(sopranoVisitor):
 
         a = (self.stack[-1][ctx.expr(0).getText()] in self.notas.keys())
         b = (self.stack[-1][ctx.expr(1).getText()] in self.notas.keys())
-
-        # variable_note > variable_note
+        # variable_note <= variable_note
         if a and b:
             note1 = self.stack[-1][ctx.expr(0).getText()]
             val1 = self.notas[note1]
             note2 = self.stack[-1][ctx.expr(1).getText()]
             val2 = self.notas[note2]
             return int(val1 <= val2)
-        # pure_note > variable_note
+        # variable_note <= pure_note
         elif a:
             note1 = self.stack[-1][ctx.expr(0).getText()]
             val1 = self.notas[note1]
             note2 = ctx.expr(1).getText()
             val2 = self.notas[note2]
             return int(val1 <= val2)
-        # nota < variable
+        # nota <= variable
         elif b:
             note1 = ctx.expr(0).getText()
             val1 = self.notas[note1]
             note2 = self.stack[-1][ctx.expr(1).getText()]
             val2 = self.notas[note2]
             return int(val1 <= val2)
-        # integer < integer
+        # integer <= integer
         else: 
             return int(self.visit(l[0]) <= self.visit(l[2])) 
 
