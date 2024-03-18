@@ -1,2 +1,6 @@
 __pycache__/
 .antlr
+.git
+.env
+.venv
+
