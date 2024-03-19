@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+{% block title %}IDE{% endblock %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+{% block content %}
+    {% if name %}
+    <h1>¡Hola {{ name }}!</h1>
+    {% else %}
+    <h1>Hello, World!</h1>
+    {% endif %}
+    <div class="cinta-opciones">
+      <p class="important">
+        Bienvenido a Soprano.
+      </p>
+      <div>
+        
+      </div>      
+    </div>
+    
+    
+{% endblock %}
