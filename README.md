@@ -25,3 +25,7 @@ python3 test.py input.txt
 * LilyPond: Para generar las partituras. Lilypond ya genera MIDI y PDF. 
 * timidity++: Para generar WAV a partir de MIDI. 
 * ffmpeg: Para generar MP3 a partir de WAV.
+
+## Agradecimientos
+Zaira Zuviría
+Lucas Bazilio
