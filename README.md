@@ -27,5 +27,5 @@ python3 test.py input.txt
 * ffmpeg: Para generar MP3 a partir de WAV.
 
 ## Agradecimientos
-Zaira Zuviría
-Lucas Bazilio
+- Zaira Zuviría
+- Lucas Bazilio
