@@ -1,6 +1,11 @@
+# 24/03/2024
+# Autor: Adrian V.
 import os
 from collections import defaultdict
-from sopranoVisitor import sopranoVisitor
+if __name__ is not None and "." in __name__:
+    from .sopranoVisitor import sopranoVisitor
+else:
+    from sopranoVisitor import sopranoVisitor
 
 class bcolors:
     OK = "\033[92m"  # GREEN
@@ -19,10 +24,11 @@ class Procedimiento():
         self.inss = inss
 
 class Visitor(sopranoVisitor):
-    def __init__(self, file_name, entryProc='Main', entryParams=[]):
+    def __init__(self, uploads_dir, file_name, entryProc='Main', entryParams=[]):
         self.entryProc = entryProc
         self.entryParams = entryParams
-        self.file_name = file_name.rsplit(".", 1)[0]
+        self.uploads_dir = uploads_dir
+        self.file_name = file_name
         self.procs = {}         # procedimientos
         self.stack = []         # TABLA DE SÍMBOLOS
         self.partituras = []    # lista para partituras
@@ -102,16 +108,16 @@ class Visitor(sopranoVisitor):
         # No existe proc Main y no se especificó al ejecutar
         if not self.entryProc in self.procs:
             raise SopranoException(bcolors.FAIL+"No existe el procedimiento "+self.entryProc+"."+bcolors.RESET)
-
         # Ejecutar procedimientos
         self.__proc__(self.entryProc,self.entryParams)
-        
-        absolute_path = os.path.dirname(os.path.abspath(__file__))
+        # Formatear lista de notas para lilypond
         notas_partitura = ' '.join(map(str,self.partituras))
         notas = notas_partitura.lower()
-        os.mkdir(self.file_name)
+        # Directorio para los archivos .ly, .midi, .wav, .pdf y .mp3
+        os.mkdir(f'{self.uploads_dir}/{self.file_name}')
         print(bcolors.OK+"Generating FILES..."+bcolors.RESET)
-        file = open(f'{absolute_path}/{self.file_name}/{self.file_name}.ly', "w")
+        # Crear lilypond
+        file = open(f'{self.uploads_dir}/{self.file_name}/{self.file_name}.ly', "w+")
         file.write("\\version \"2.20.0\"" + os.linesep)
         file.write("\score {" + os.linesep)
         file.write("\t \\absolute {" + os.linesep)
@@ -122,7 +128,7 @@ class Visitor(sopranoVisitor):
         file.write("\t \midi { }" + os.linesep)
         file.write("}")
         file.close()
-        os.chdir(f'./{self.file_name}')
+        os.chdir(f'{self.uploads_dir}/{self.file_name}')
         os.system(f'lilypond {self.file_name}.ly')
         os.system(f'timidity -Ow -o {self.file_name}.wav {self.file_name}.midi')
         os.system(f'ffmpeg -i {self.file_name}.wav -codec:a libmp3lame -qscale:a 2 {self.file_name}.mp3')

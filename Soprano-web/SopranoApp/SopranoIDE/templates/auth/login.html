@@ -1,13 +1,11 @@
-{% extends "layout.html" %}
+{% extends "sopranoIDE/layout.html" %}
 {% block title %}Login{% endblock %}
-{% block head %}
-  {{ super() }}
-{% endblock %}
+
 {% block content %}
     <div id="login">
         <img src="../static/icons/logo_svg.svg" width="213" alt="Soprano logo">
         <h1>Login</h1>
-        <form action="{{ url_for('login') }}" method="post" class="form login-form">
+        <form action="{{ url_for('auth.login') }}" method="post" class="form login-form">
             <div>
                 <label for="email">Correo</label>
                 <input name="email" id="email" type="text" required>
@@ -16,7 +14,7 @@
                 <label for="password">Contraseña</label>
                 <input name="password" id="password" type="password" required>
             </div>
-            <a href="{{ url_for('registrarse') }}">
+            <a href="{{ url_for('auth.registrarse') }}">
                 <small>¿No tienes una cuenta? Registrate</small>
             </a>
             <button type="submit">Login</button>

@@ -1,19 +1,26 @@
-*{
-    font-family: Geneva, Tahoma, sans-serif
+html { 
+    font-family: Geneva, Tahoma, sans-serif;
+    background: #eee; 
 }
 
 body {
-    margin: 0;
+    margin: 0 auto;
 }
+a { color: #377ba8; }
+hr { border: none; border-top: 1px solid lightgray; }
+nav { background: #4d31a295; }
+nav a { color: white; text-decoration: none; padding: 0.25rem 0.5rem; }
+nav ul  { display: flex; list-style: none; align-items: center; margin: 0; padding: 0; }
 
 .logo {
     display: flex;
-    background-color: #F6995C;
-    padding: 0 20px;
+    padding: 0 15px 0 10px;
+    cursor: pointer;
 }
 
 .logo h1{
     padding-left: 20px;
+    color: black;
 }
 
 .header-cinta img {
@@ -24,19 +31,23 @@ body {
     background-color: #EADFB4;
     display: flex;
     justify-content: space-between;
-    padding: 0 20px;
+    align-items: center;
+    padding: 10px 20px;
     margin-bottom: 10px;
+    box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
 }
 
-.nuevo-archivo {
+#nuevo-archivo {
     display: flex;
+    flex-direction: column;
 }
 
-.nuevo-archivo p {
-    width: fit-content;
-    font-size: 22px;
-    font-weight: bold;
-    padding-left: 20px;
+#upload{
+    background-color: dodgerblue;
+    border: none;
+    border-radius: 6px;
+    padding: 5px;
+    margin-top: 5px;
 }
 
 #container-ide {
@@ -48,7 +59,7 @@ body {
 #Partituras h2{
     background: #D9D9D9;
     width: 689px;
-    height: 120px;
+    height: 50px;
     text-align: center;
     
 }
@@ -56,7 +67,7 @@ body {
 #Partituras div{
     background: #FFFF;
     width: 689px;
-    height: 176px;
+    height: 50px;
     text-align: center;
     
 }
@@ -142,25 +153,24 @@ body {
     float: left;
     width: 45px;
     height: 732px;
-    /* margin-top: 50px; */
     background-color: #D9D9D9;
 }
 
 .archivos-top{
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
+    align-items: center;
+    justify-content: space-between;
     background-color: #51829B;
+    padding: 0 15px;
 }
-
-.archivos-top p{
-    padding: 15px;
-    margin: 0 10px 0 0;
-    cursor: pointer;
-}
-
-.archivos-top :last-child{
+.archivos-top input{
     background-color: #9BB0C1;
+    border-color: #9BB0C1;
+    border-radius: 10px;
+    margin-top: 3px;
+    margin-bottom: 3px;
+    padding: 3px;
 }
 
 .lado-der {
@@ -177,8 +187,6 @@ body {
     text-align: center;
     width: 580px;
 }
-
-
 #login div {
     text-align: start;
 }
@@ -186,10 +194,26 @@ body {
 #login a {
     color: white;
 }
-
-
 #login button {
     background-color: #F6995C;
     border-color: #F6995C;
     border-radius: 10px;
+}
+textarea {
+    padding: 5px;
+}
+.flash {
+    margin: 10px;
+}
+.flash small {
+    background-color: #d91313d6; 
+    border-radius: 10px; 
+    cursor: pointer; 
+    margin:0; 
+    width:50px; 
+    text-align: center; 
+    padding: 5px;
+}
+.progress, .information{
+    display: none;
 }

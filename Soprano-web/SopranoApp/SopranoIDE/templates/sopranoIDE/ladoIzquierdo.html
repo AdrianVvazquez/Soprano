@@ -1,0 +1,37 @@
+<div class="lado-izq">
+    <section class="codigo-fuente">
+        <div class="linea-num"></div>
+        <div class="progress" >
+            <div id="progressbar" class="progress-bar" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+        </div>
+        <div class="information">
+            <div class="alert alert-info">Todo listo.</div>
+        </div>
+          
+        <form action="{{url_for('sopranoIDE.index')}}" method="post">
+            <div class="archivos-top">
+                <div>
+                    <label for="filename">Nombre: </label>
+                    <input type="text" placeholder="Archivo" required name="filename" id="filename">
+                    <small for="filename">.spr</small>
+                </div>
+                <div>
+                    <label id="first_proc_label" for="first_proc">Main: </label>
+                    <input type="text" placeholder="Primer procedimiento" required name="first_proc" id="first_proc">
+                </div>
+            </div>
+            <textarea required placeholder="Start typing..." name="codigo" id="codigo" cols="90" rows="24"></textarea>
+            <button type="submit" id="submit-code" hidden>Send</button>
+        </form>
+    </section>
+    
+  <section>
+    {% for message in get_flashed_messages() %}
+    <div class="flash" style="margin: 10px;">
+      <small onclick="$(this.parentElement).fadeOut();">
+      close</small>
+      {{ message }}
+    </div>
+    {% endfor %}
+  </section>
+</div>
