@@ -13,13 +13,15 @@ antlr4 -Dlanguage=Python3 -no-listener -visitor soprano.g
 
 ## Intérprete
 Su función principal radica en tomar composiciones algorítmicas escritas en el lenguaje Soprano y convertirlas en partituras digitales acompañadas de archivos de sonido que dan vida a la melodía concebida por el compositor. 
+![Diagrama del intérprete de Soprano](image.png)
 
 **Ejecutar prueba**
+En linux:
 ```shell
-python3 test.py input.txt
+user: ~/proyecto_soprano/Soprano-web$ ./run_flask.sh
 ```
-
-![Diagrama del intérprete](image.png)
+(Desde el directorio raíz del repositorio)
+> run_flask.sh navega al directorio de la app de flask, activa el entorno virtual de python, instala las librerías necesarias y ejecuta un servidor de Flask en modo depuración en la url http://127.0.0.1:5000.
 
 ## Programas externos
 * LilyPond: Para generar las partituras. Lilypond ya genera MIDI y PDF. 
