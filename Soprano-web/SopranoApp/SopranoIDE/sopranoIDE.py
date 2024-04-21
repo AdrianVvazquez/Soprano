@@ -1,6 +1,7 @@
 # 24/03/2024
 # Autor: Adrian V.
 import os
+from pathlib import Path
 from flask import ( 
     Blueprint, flash, g, redirect, render_template, request, url_for
     ,send_from_directory, current_app
@@ -8,8 +9,8 @@ from flask import (
 from werkzeug.utils import secure_filename
 from werkzeug.exceptions import abort
 from SopranoGrammar import soprano
-from SopranoIDE.auth import login_required
-from SopranoIDE.db import get_db
+from .responses.reponse_json import response_json
+import zipfile
 
 bp = Blueprint('sopranoIDE', __name__)
 
@@ -24,45 +25,65 @@ def index():
             flash('Todos los campos son requeridos.')
             return render_template('sopranoIDE/index.html')
         
+        # secure filename
+        filename = secure_filename(file_name)
         # write source file 
-        # file_path = os.path.join(os.path.dirname(__file__), f'{file_name}.spr')
-        file_path = os.path.join("/",current_app.config["UPLOAD_FOLDER"], f'{file_name}.spr')
+        file_path = os.path.join(os.environ.get('UPLOADS_DIR'), f'{filename}.spr')
         try:
             with open(file_path, 'w') as f:
                 f.write(source_code)
             # run Soprano interpreter
+            flash("[DEBUG] Starting running interpreter.")
             soprano.run_soprano(file_path, entry_Proc)
-            return redirect('downloads',filename=f'{file_name}/{file_name}.mp3')
+            flash("[INFO] Descargando archivos...")
+            return redirect(url_for('sopranoIDE.download_folder',filename=filename))
         except FileNotFoundError as e:
-            flash('No se pudo crear el archivo.')
+            flash('[ERROR] No se pudo crear el archivo.')
+        except FileExistsError as e:
+            flash("[ERROR] Ya existe un archivo con este nombre.")
         except Exception as e:
-            if "File exists" in str(e):
-                flash("Un archivo con este nombre ya existe.")
+            if e.args:
+                error_code = e.args[0]
+                flash(f'[ERROR: {error_code}] {e}')
+            else:
+                flash(e)
         
     return render_template('sopranoIDE/index.html')
 
 @bp.route('/upload', methods=['POST'])
 def upload_file():
     if request.method == 'POST':
-        # check if the post request has the file part
-        if 'file' not in request.files:
-            flash('No file part')
-            return redirect(url_for('index'))
-        file = request.files['file']
-        # If the user does not select a file, the browser submits an
-        # empty file without a filename.
-        if file.filename == '':
-            flash('Selecciona un archivo.')
-            return redirect(url_for('index'))
-        if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            file.save(os.path.join('/',current_app.config['UPLOAD_FOLDER'], filename))
-            flash("Archivo cargado existósamente.")
-            return redirect(url_for('index'))
+        filename = secure_filename(file.filename)
+        if not allowed_file(filename):
+            return response_json("Bad file extension", 400)
+            
+        try:
+            file = request.files['file']
+            file.save(Path(current_app.config["UPLOAD_FOLDER"]) + filename)
+            return response_json("success")
+        except FileNotFoundError:
+            return response_json("Folder not found", 404)
+        except Exception as e:
+            return response_json(str(e), 400)
+        
 
-@bp.route('/downloads/<filename>')
-def download_file(filename):
-    return send_from_directory('/'+current_app.config["UPLOAD_FOLDER"], filename)
+@bp.route('/download/<string:filename>', methods=['GET'])
+def download_folder(filename):
+    filename = secure_filename(filename)
+    nombre_zip = f'{filename}.zip'
+    musica_dir_path = Path(os.path.join(current_app.config["UPLOAD_FOLDER"], filename))
+    try:
+        # Crear el archivo zip
+        with zipfile.ZipFile(f'{musica_dir_path}/{nombre_zip}', 'w', zipfile.ZIP_DEFLATED) as zip_obj:
+            for file in musica_dir_path.iterdir():
+                if file.suffix != ".zip":
+                    print(file)
+                    zip_obj.write(file, arcname=file.name)
+        # Enviar el archivo zip para descargar
+        return send_from_directory(musica_dir_path, path=nombre_zip, as_attachment=True)
+    except Exception as e:
+        return response_json(str(e), 404)
+
 
 def allowed_file(filename):
     return '.' in filename and \

@@ -14,8 +14,12 @@ class bcolors:
     RESET = "\033[0m"  # RESET COLOR
 
 class SopranoException(Exception):
-    def __init__(self, message):
-        self.message = 'Error' + message
+    def __init__(self, message, error_code=400):
+        self.args = [error_code]
+        self.message = message
+
+    def __str__(self) -> str:
+        return self.message
 
 class Procedimiento():
     def __init__(self, name, params, inss):
@@ -90,7 +94,7 @@ class Visitor(sopranoVisitor):
     def __proc__(self, name, paramsValues):
         # error handling
         if(len(self.procs[name].params) != len(paramsValues)):
-            raise SopranoException(bcolors.FAIL+'En \"' + name + '\" proc se esperaba ' + str(len(self.procs[name].params))+ ' param(s), '+ str(len(paramsValues))+ ' param(s) recibidos.'+bcolors.RESET)
+            raise SopranoException('En \"' + name + '\" proc se esperaba ' + str(len(self.procs[name].params))+ ' param(s), '+ str(len(paramsValues))+ ' param(s) recibidos.')
         
         # Lista de variables locales 
         newvars = defaultdict(lambda:0)
@@ -107,7 +111,7 @@ class Visitor(sopranoVisitor):
             self.visit(proc)
         # No existe proc Main y no se especificó al ejecutar
         if not self.entryProc in self.procs:
-            raise SopranoException(bcolors.FAIL+"No existe el procedimiento "+self.entryProc+"."+bcolors.RESET)
+            raise SopranoException("No existe el procedimiento "+self.entryProc+".", error_code=400)
         # Ejecutar procedimientos
         self.__proc__(self.entryProc,self.entryParams)
         # Formatear lista de notas para lilypond
@@ -213,20 +217,22 @@ class Visitor(sopranoVisitor):
     def visitLlamadaProcedimiento(self, ctx):
         l = list(ctx.getChildren())
         name = l[0].getText()
-        # Obtener lista de parámetros(paramsExp)
+        # Obtener lista de paramsExp
         params = self.visit(l[1]) 
         if name in self.procs:
             self.__proc__(name, params)
         else:
-            raise SopranoException(bcolors.FAIL+'Procedure \"'+ name + '\" non defined.'+bcolors.RESET)
+            raise SopranoException('Procedure \"'+ name + '\" non defined.')
 
     def visitProcedimiento(self, ctx):
         l = list(ctx.getChildren())
+        if(l[2] != "|:" or l[-1] != ":|"):
+            raise SopranoException('Se esperaba |: :|')
         name = l[0].getText()
-        # Obtener lista con parámetros(paramsId)
+        # Obtener lista con paramsId
         params = self.visit(l[1]) 
         if name in self.procs:
-            raise SopranoException(bcolors.FAIL+'Procedure \"'+ name + '\" already defined.'+bcolors.RESET)
+            raise SopranoException('Procedure \"'+ name + '\" already defined.')
         else:
             self.procs[name] = Procedimiento(name, params, ctx.inss())
 
@@ -271,9 +277,9 @@ class Visitor(sopranoVisitor):
                 size = len(self.stack[-1][ctx.VAR().getText()])
                 return size
             else:
-                raise SopranoException(bcolors.FAIL+"Variable " + ctx.VAR().getText()+ " is not a list."+bcolors.RESET)
+                raise SopranoException("Variable " + ctx.VAR().getText()+ " is not a list.")
         else:
-            raise SopranoException(bcolors.FAIL+"Variable " + ctx.VAR().getText()+ " is not defined in the scope."+bcolors.RESET)
+            raise SopranoException("Variable " + ctx.VAR().getText()+ " is not defined in the scope.")
 
 
     def visitConsult(self, ctx):
@@ -282,7 +288,7 @@ class Visitor(sopranoVisitor):
         index = self.visit(ctx.expr())
         size = len(self.stack[-1][ctx.VAR().getText()])
         if index < 1 or index > size:
-            raise SopranoException(bcolors.FAIL+'index ' + str(index) + ' does not belong to variable '+ ctx.VAR().getText()+"."+bcolors.RESET)
+            raise SopranoException('index ' + str(index) + ' does not belong to variable '+ ctx.VAR().getText()+".")
         else:
             return ((self.stack[-1][ctx.VAR().getText()]) [index-1])
         
@@ -572,6 +578,6 @@ class Visitor(sopranoVisitor):
         expresion = self.visit(ctx.expr())
         size = len(self.stack[-1][ctx.VAR().getText()])
         if expresion < 1 or expresion > size:
-            raise SopranoException(bcolors.FAIL+'index' + str(expresion) + 'does not belong to the list '+ ctx.VAR().getText()+"."+bcolors.RESET)
+            raise SopranoException('index' + str(expresion) + 'does not belong to the list '+ ctx.VAR().getText()+".")
         else:
             del((self.stack[-1][ctx.VAR().getText()])[expresion-1])

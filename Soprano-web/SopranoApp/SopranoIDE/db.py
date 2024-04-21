@@ -1,6 +1,6 @@
 # 24/03/2024
 # Autor: Adrian V.
-# Aquí se inicializa la base de datos y se crea una conexión para la base de datos.
+# Aquí se inicializa la base de datos y se crea una conexión para reusar.
 import sqlite3
 
 import click
