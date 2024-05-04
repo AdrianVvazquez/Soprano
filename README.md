@@ -1,6 +1,6 @@
 # Intérprete para lenguaje de programación Soprano
 Para este proyecto se desarrolló un nuevo lenguaje de programación con una sintaxis basada en como se escribe la música. También se desarrolló el intérprete que traducirá el programa escrito en Soprano a las partituras correspondientes en un archivo pdf, un archivo wav, midi y mp3 de la melodía.
-
+![Soprano IDE](SopranoWeb.png)
 ## Soprano
 Soprano es un lenguaje de programación musical orientado a la composición algorítmica. Es decir, que compone música mediante algoritmos, usando estructuras definidas y una sintaxis específica.
 Soprano permite escribir programas sencillos de forma similar a los lenguajes de programación habituales como C, Python o Java. 
