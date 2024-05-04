@@ -2,7 +2,7 @@ __pycache__/
 .antlr
 .git
 .env
-.venv/
+venv
 
 *.pyc
 instance/

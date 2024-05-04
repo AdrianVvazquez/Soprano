@@ -3,21 +3,26 @@
 {% block title %}Inicio{% endblock %}
 
 {% block content %}
+	<div id="container-ide">
+		{% include 'sopranoIDE/ladoIzquierdo.html' %}
+		{% include 'sopranoIDE/ladoDerecho.html' %}
+	</div>
 
-  {% for file in files %}
-  <header>
-    <div>
-      <h1>{{ file['title'] }}</h1>
-      <div class="about">by {{ file['username'] }} on {{ file['created'].strftime('%Y-%m-%d') }}</div>
-    </div>
-  </header>
-  {% endfor %}
+	<div class="container">
+		<h1>¿Qué es Soprano?</h1>
+		<p>Soprano es un lenguaje de programación musical orientado a la composición algorítmica. Es decir, que compone música mediante algoritmos, usando estructuras definidas y una sintaxis específica. Soprano permite escribir programas sencillos de forma similar a los lenguajes de programación habituales como C, Python o Java. Su gramática está escrita con ANTLR y python.</p>	
+		
+		<h2>¿Cómo usarlo?</h2>
+		<ol>
+			<li>Elige un nombre corto para tu proyecto.</li>
+			<li>Elige el nombre de tu procedimiento principal, por defecto es Main.</li>
+			<li>Presiona F9 para compilar tu programa y generar una canción.</li>
+		</ol>
 
-  <div id="container-ide">
-    <!-- <div class="container"> -->
-      {% include 'sopranoIDE/ladoIzquierdo.html' %}
-      {% include 'sopranoIDE/ladoDerecho.html' %}
-    <!-- </div> -->
-  </div>
-
+		<h2>Reglas del lenguaje Soprano</h2>
+		<ul>
+			<li>El nombre de los procedimientos tiene que empezar con una letra mayúscula, seguida de una o más letras minúsculas o números.</li>
+			<li>El contenido de los procedimientos se escribe entre |: :|</li>
+		</ul>
+	</div>
 {% endblock %}

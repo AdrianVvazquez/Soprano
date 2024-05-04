@@ -3,15 +3,16 @@
 import os
 from pathlib import Path
 from flask import ( 
-    Blueprint, flash, g, redirect, render_template, request, url_for
+    Blueprint, flash, redirect, render_template, request, url_for
     ,send_from_directory, current_app
 )
 from werkzeug.utils import secure_filename
-from werkzeug.exceptions import abort
 from SopranoGrammar import soprano
 from .responses.reponse_json import response_json
 import zipfile
+from dotenv import load_dotenv
 
+load_dotenv()
 bp = Blueprint('sopranoIDE', __name__)
 
 @bp.route('/', methods=['get','post'])
@@ -30,7 +31,7 @@ def index():
         # secure filename
         filename = secure_filename(file_name)
         # write source file 
-        file_path = os.path.join(os.environ.get('UPLOADS_DIR'), f'{filename}.spr')
+        file_path = os.path.join(current_app.config['UPLOAD_FOLDER'], f'{filename}.spr')
         try:
             with open(file_path, 'w') as f:
                 f.write(source_code)
