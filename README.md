@@ -3,7 +3,7 @@ Soprano es un lenguaje de programación orientado a la composición algorítmica
 
 Usa estructuras definidas y una sintaxis específica. Su sintaxis está basada en la sintaxis musical y en otros lenguajes de programación como C y Python.
 
-> Anuncio: 🌐¡Soprano en la web! Apoya el proyecto⭐
+> 🌐¿Te gustaría ver a Soprano en la web? Apoya el proyecto⭐
 
 ![Soprano IDE](SopranoWeb.png)
 
